@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parampara - The Ethnic Wear | Premium Atelier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF8F5; color: #2D2A26; }
+        .serif-title { font-family: 'Marcellus', serif; }
+        [x-cloak] { display: none !important; }
+        
+        /* Smooth utility drawer hover animation rules */
+        .icon-btn .label-text {
+            max-width: 0;
+            opacity: 0;
+            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        .icon-btn:hover .label-text {
+            max-width: 120px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6 lg:p-8 min-h-screen flex flex-col justify-between" x-data="paramparaApp()">
+
+    <div class="relative w-full rounded-[2.5rem] border border-[#EAE4DC] overflow-hidden flex flex-col justify-between min-h-[92vh] p-6 md:p-10 bg-[#F4EFEA]/30 shadow-xl">
+        
+        <div class="relative z-10 flex items-center justify-between w-full">
+            
+            <div class="flex items-center">
+                <a href="#" class="block hover:opacity-90 transition">
+                    <img src="LogoIcon.png" alt="Parampara Logo" class="h-16 sm:h-20 w-auto object-contain">
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center bg-white/50 backdrop-blur-md border border border-white/60 rounded-full p-1.5 shadow-md">
+                <template x-for="cat in groupCategories">
+                    <button @click="selectedCategory = cat; scrollToCatalog()" 
+                            :class="selectedCategory === cat ? 'bg-[#5C2C16] text-white font-medium shadow-sm' : 'text-[#4A2312]/80 hover:text-[#5C2C16] hover:bg-white/40'"
+                            class="text-[11px] uppercase tracking-[0.2em] px-6 py-2.5 transition-all duration-300 rounded-full font-normal"
+                            x-text="cat">
+                    </button>
+                </template>
+            </div>
+
+            <div class="flex items-center space-x-5">
+                
+                <button @click="wishlistOpen = true" class="icon-btn group relative flex items-center h-12 px-4 bg-white/60 backdrop-blur-xs rounded-full border border-white/70 text-[#2D2A26] hover:bg-white transition-all duration-300 shadow-sm cursor-pointer">
+                    <i class="fa-regular fa-heart text-2xl"></i>
+                    <span class="label-text block text-[11px] font-semibold uppercase tracking-[0.15em] ml-2 text-[#4A2312] whitespace-nowrap overflow-hidden">Wishlist</span>
+                    <span x-show="wishlist.length > 0" x-text="wishlist.length" class="absolute -top-1 -right-1 bg-[#9E7356] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold"></span>
+                </button>
+
+                <button @click="cartOpen = true" class="icon-btn group relative flex items-center h-12 px-4 bg-white/60 backdrop-blur-xs rounded-full border border-white/70 text-[#2D2A26] hover:bg-white transition-all duration-300 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-bag-shopping text-2xl"></i>
+                    <span class="label-text block text-[11px] font-semibold uppercase tracking-[0.15em] ml-2 text-[#4A2312] whitespace-nowrap overflow-hidden">Bag</span>
+                    <span x-show="cart.length > 0" x-text="cart.length" class="absolute -top-1 -right-1 bg-[#5C2C16] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold"></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mt-20 w-full">
+            
+            <div class="lg:col-span-7 space-y-6 sm:space-y-8">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <img src="LogoIcontext.png" alt="Parampara" class="h-6 sm:h-7 w-auto object-contain">
+                    </div>
+                    <h1 class="serif-title text-5xl sm:text-7xl lg:text-8xl font-light text-[#4A2312] leading-[0.95] tracking-tight lowercase">
+                        delicate <br><span class="italic text-[#9E7356] font-light">ethnic fabrics.</span>
+                    </h1>
+                </div>
+                
+                <div class="max-w-md space-y-3 border-l-2 border-[#9E7356]/30 pl-4">
+                    <p class="text-[10px] tracking-[0.25em] font-bold text-[#9E7356] uppercase">Summer Handloom Atelier</p>
+                    <p class="text-xs sm:text-sm text-[#5C544C] tracking-wide leading-relaxed font-normal">
+                        Every loop, print, and border represents an unforgettable tribute to breathable craftsmanship. Preserving beautiful traditional lines for timeless everyday comfort.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col space-y-4 lg:items-end w-full">
+                
+                <div class="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/80 flex items-center justify-between w-full max-w-sm shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-14 rounded-xl bg-cover bg-center bg-[#F4EFEA]" style="background-image: url('https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=150&q=80');"></div>
+                        <div>
+                            <h4 class="text-xs font-semibold tracking-wider text-[#4A2312] uppercase">The Lookbook Edit</h4>
+                            <p class="text-[11px] text-[#8C847C]">Plunge into soft pastels</p>
+                        </div>
+                    </div>
+                    <a href="#catalog" class="bg-[#4A2312] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2.5 rounded-full hover:bg-[#5C2C16] transition-all shadow-sm">Explore</a>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 w-full max-w-sm">
+                    <div class="bg-white/40 border border-white/60 p-1.5 rounded-2xl aspect-[4/3] bg-cover bg-center group relative overflow-hidden shadow-2xs" style="background-image: url('https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=80');">
+                        <div class="absolute inset-0 bg-[#4A2312]/10 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    </div>
+                    <div class="bg-white/40 border border-white/60 p-1.5 rounded-2xl aspect-[4/3] bg-cover bg-center group relative overflow-hidden shadow-2xs" style="background-image: url('https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=300&q=80');">
+                        <div class="absolute inset-0 bg-[#4A2312]/10 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <main id="catalog" class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-24">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-[#EAE4DC]">
+            <div>
+                <span class="text-[10px] uppercase tracking-[0.25em] text-[#9E7356] font-bold block mb-1">Seasonal Collection</span>
+                <h2 class="serif-title text-3xl sm:text-4xl font-normal text-[#4A2312]">The Lookbook Portfolio</h2>
+            </div>
+            
+            <div class="flex md:hidden flex-wrap gap-2 mt-4">
+                <template x-for="cat in groupCategories">
+                    <button @click="selectedCategory = cat" 
+                            :class="selectedCategory === cat ? 'bg-[#4A2312] text-white' : 'bg-white text-[#2D2A26] border border-[#EAE4DC]'"
+                            class="text-[10px] uppercase tracking-wider px-4 py-2 rounded-full font-medium transition"
+                            x-text="cat">
+                    </button>
+                </template>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
+            <template x-for="item in filteredItems()" :key="item.id">
+                <div class="group relative flex flex-col justify-between bg-white p-4 rounded-2xl border border-[#EAE4DC]/60 hover:shadow-xl hover:border-[#9E7356]/40 transition-all duration-300">
+                    
+                    <div class="relative aspect-[3/4] w-full overflow-hidden bg-[#F4EFEA] rounded-xl mb-5">
+                        <img :src="item.image" :alt="item.title" class="h-full w-full object-cover object-top transition duration-700 group-hover:scale-103">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#4A2312]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-between p-4">
+                            <div class="flex justify-end">
+                                <button @click="toggleWishlist(item)" class="bg-white/90 backdrop-blur-xs p-2.5 rounded-full shadow-md text-[#4A2312] hover:bg-[#4A2312] hover:text-white transition">
+                                    <i :class="isWishlisted(item.id) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'"></i>
+                                </button>
+                            </div>
+                            <button @click="triggerQuickView(item)" class="w-full bg-white/95 text-[#4A2312] text-[10px] uppercase tracking-[0.2em] py-3.5 font-bold rounded-xl shadow-md hover:bg-[#4A2312] hover:text-white transition">
+                                View Silhouette Details
+                            </button>
+                        </div>
+                        
+                        <template x-if="item.badge">
+                            <span class="absolute top-3 left-3 bg-[#9E7356] text-white text-[8px] uppercase tracking-[0.2em] px-3 py-1.5 font-bold rounded shadow-xs" x-text="item.badge"></span>
+                        </template>
+                    </div>
+
+                    <div class="px-1 flex justify-between items-start gap-4">
+                        <div>
+                            <h3 class="text-xs font-semibold text-[#2D2A26] tracking-wide leading-tight">
+                                <a href="#" @click.prevent="triggerQuickView(item)" x-text="item.title" class="hover:text-[#9E7356] transition-colors"></a>
+                            </h3>
+                            <p class="text-[11px] text-[#8C847C] mt-1.5 italic font-medium" x-text="item.fabricInfo"></p>
+                        </div>
+                        <p class="text-sm font-bold text-[#4A2312]" x-text="'₹' + item.price.toLocaleString('en-IN')"></p>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </main>
+
+    <div x-show="quickViewActive" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak>
+        <div class="fixed inset-0 bg-[#2D2A26]/40 backdrop-blur-sm" @click="quickViewActive = false"></div>
+        <div class="bg-[#FCFBF9] border border-[#EAE4DC] max-w-4xl w-full rounded-2xl relative flex flex-col md:flex-row overflow-hidden z-10 shadow-2xl animate-fade-in" @click.outside="quickViewActive = false">
+            <button @click="quickViewActive = false" class="absolute top-4 right-4 z-20 text-[#2D2A26] bg-white/80 p-2 rounded-full shadow border border-[#EAE4DC]"><i class="fa-solid fa-xmark"></i></button>
+            <div class="w-full md:w-1/2 aspect-[3/4] md:aspect-auto bg-[#F4EFEA]"><img :src="focusedUnit?.image" class="w-full h-full object-cover object-top"></div>
+            <div class="w-full md:w-1/2 p-8 flex flex-col justify-between bg-white">
+                <div>
+                    <span class="text-[9px] uppercase tracking-[0.25em] text-[#9E7356] font-bold block mb-1" x-text="focusedUnit?.category"></span>
+                    <h2 class="serif-title text-2xl text-[#4A2312] mb-2" x-text="focusedUnit?.title"></h2>
+                    <p class="text-xl font-bold text-[#4A2312] mb-4" x-text="'₹' + focusedUnit?.price.toLocaleString('en-IN')"></p>
+                    <hr class="border-[#EAE4DC] my-4">
+                    <p class="text-xs text-[#5C544C] mb-6 font-normal leading-relaxed tracking-wide" x-text="focusedUnit?.narrative"></p>
+                </div>
+                <button @click="insertIntoCart(focusedUnit, chosenSize)" class="w-full bg-[#4A2312] text-white text-[10px] uppercase tracking-widest font-bold py-4 rounded-xl shadow hover:bg-[#5C2C16] transition">Add to Shopping Bag</button>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="cartOpen" class="relative z-50" x-cloak>
+        <div class="fixed inset-0 bg-[#2D2A26]/30 backdrop-blur-xs" @click="cartOpen = false"></div>
+        <div class="fixed inset-y-0 right-0 max-w-md w-full bg-[#FCFBF9] border-l border-[#EAE4DC] p-6 flex flex-col justify-between z-10 shadow-2xl">
+            <div>
+                <h3 class="serif-title text-xl text-[#4A2312] border-b border-[#EAE4DC] pb-4">Shopping Bag</h3>
+                <div class="space-y-4 mt-6 overflow-y-auto max-h-[60vh]">
+                    <template x-for="(bagItem, index) in cart">
+                        <div class="flex items-center justify-between pb-4 border-b border-[#F4EFEA]">
+                            <div class="flex items-center space-x-3">
+                                <img :src="bagItem.image" class="w-12 h-16 object-cover object-top rounded bg-[#F4EFEA]">
+                                <span class="text-xs font-medium text-[#2D2A26]" x-text="bagItem.title"></span>
+                            </div>
+                            <button @click="removeLineItem(index)" class="text-[11px] text-red-600 font-bold">Remove</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <button @click="checkoutBulkWhatsApp()" class="w-full bg-[#4A2312] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow hover:bg-[#5C2C16] transition">Send Order to WhatsApp</button>
+        </div>
+    </div>
+
+    <div x-show="wishlistOpen" class="relative z-50" x-cloak>
+        <div class="fixed inset-0 bg-[#2D2A26]/30 backdrop-blur-xs" @click="wishlistOpen = false"></div>
+        <div class="fixed inset-y-0 right-0 max-w-md w-full bg-[#FCFBF9] border-l border-[#EAE4DC] p-6 flex flex-col justify-between z-10 shadow-2xl">
+            <div>
+                <h3 class="serif-title text-xl text-[#4A2312] border-b border-[#EAE4DC] pb-4">Your Wishlist</h3>
+                <div class="space-y-4 mt-6">
+                    <template x-for="wItem in wishlist">
+                        <div class="flex items-center justify-between pb-4 border-b border-[#F4EFEA]">
+                            <span class="text-xs font-medium text-[#2D2A26]" x-text="wItem.title"></span>
+                            <button @click="toggleWishlist(wItem)" class="text-[11px] text-[#8C847C] hover:text-red-700 transition">Remove</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-24 py-10 border-t border-[#EAE4DC] text-center text-[10px] text-[#8C847C] uppercase tracking-[0.25em]">
+        <p class="serif-title text-[#4A2312] lowercase text-xl font-normal tracking-wide normal-case mb-2">Parampara</p>
+        <p class="font-light normal-case tracking-normal">&copy; 2026 Parampara Luxury Ethnic Collections. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function paramparaApp() {
+            return {
+                mobileMenu: false,
+                cartOpen: false,
+                wishlistOpen: false,
+                quickViewActive: false,
+                selectedCategory: 'All',
+                chosenSize: 'M',
+                focusedUnit: null,
+                
+                groupCategories: ['All', 'Kurtis & Suits', 'Festive Wear', 'Sarees'],
+                cart: [],
+                wishlist: [],
+                
+                catalogData: [
+                    { id: 1, title: "Classic Crimson Geometric Block-Print Kurti", category: "Kurtis & Suits", price: 1499, fabricInfo: "100% Breathable Premium Slub Cotton", badge: "Best Seller", narrative: "An elegant daily wear ensemble featuring traditional block print-inspired geometric patterns. Designed with a timeless Chinese collar, neat front button alignments, and comfortable three-quarter folds.", image: "https://i.ibb.co/68vst89f/image.png" },
+                    { id: 2, title: "Blossom Pink Everyday Comfort Kurti", category: "Kurtis & Suits", price: 1299, fabricInfo: "Soft Organic Cotton Slub", badge: "Trending", narrative: "Celebrate minimal luxury with this soft pink casual statement kurti. Styled with micro vertical line stitching, elegant mother-of-pearl buttons, and delicate self-lacework on the shoulder lines.", image: "https://i.ibb.co/3ykC3L46/image.png" },
+                    { id: 3, title: "Royal Azure Boota Print Festive Set", category: "Festive Wear", price: 2899, fabricInfo: "Fine Chanderi Cotton Silk Blend", badge: "Festive Pick", narrative: "Stand out on special occasions with this deep indigo-blue straight-cut regular set. Features traditional gold foil-bordered boota designs, paired beautifully with an ivory mulmul dupatta shawl layer.", image: "https://i.ibb.co/pv8pCHzY/image.png" },
+                    { id: 4, title: "Graceful Metallic Rose Pink Saree", category: "Sarees", price: 3499, fabricInfo: "Premium Textured Organza Silk", badge: "Limited Edition", narrative: "Exude unparalleled elegance with this tissue-finished metallic pink saree. Complemented by subtle silver vertical zari highlights and a matching woven designer pallu finish.", image: "https://i.ibb.co/C5mbyR9v/image.png" }
+                ],
+
+                filteredItems() {
+                    return this.catalogData.filter(unit => this.selectedCategory === 'All' || unit.category === this.selectedCategory);
+                },
+                scrollToCatalog() {
+                    document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+                },
+                triggerQuickView(unit) {
+                    this.focusedUnit = unit;
+                    this.quickViewActive = true;
+                },
+                insertIntoCart(unit, size) {
+                    this.cart.push({ id: unit.id, title: unit.title, price: unit.price, image: unit.image, size: size });
+                    this.quickViewActive = false;
+                    this.cartOpen = true;
+                },
+                removeLineItem(idx) { this.cart.splice(idx, 1); },
+                totalCalculation() { return this.cart.reduce((acc, item) => acc + item.price, 0); },
+                toggleWishlist(unit) {
+                    const idx = this.wishlist.findIndex(w => w.id === unit.id);
+                    if (idx > -1) this.wishlist.splice(idx, 1);
+                    else this.wishlist.push(unit);
+                },
+                isWishlisted(id) { return this.wishlist.some(w => w.id === id); },
+                sendWhatsAppOrder(unit, size) {
+                    window.open(`https://wa.me/919999999999?text=Order%20${encodeURIComponent(unit.title)}`, '_blank');
+                },
+                checkoutBulkWhatsApp() {
+                    window.open(`https://wa.me/919999999999?text=Bulk%20Order`, '_blank');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
