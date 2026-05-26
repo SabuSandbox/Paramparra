@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramparra - An Inheritance of Style</title>
+    <title>Parampara - The Ethnic Wear | Premium Atelier</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,7 +41,7 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-6 lg:p-8 min-h-screen flex flex-col justify-between" x-data="ParamparraApp()">
+<body class="p-4 md:p-6 lg:p-8 min-h-screen flex flex-col justify-between" x-data="paramparaApp()">
 
     <div x-show="showPwaPopup" 
          x-transition:enter="transition ease-out duration-500 transform"
@@ -52,10 +52,10 @@
          x-transition:leave-end="translate-y-20 opacity-0"
          class="fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:max-w-sm bg-white border border-[#EAE4DC] shadow-2xl rounded-2xl p-4 z-50 flex items-start space-x-4" 
          x-cloak>
-        <img src="Logoicon.png" alt="Paramparra App" class="w-12 h-12 rounded-xl object-cover border border-[#4A0E17]/10 flex-shrink-0">
+        <img src="Logoicon.png" alt="Parampara App" class="w-12 h-12 rounded-xl object-cover border border-[#4A0E17]/10 flex-shrink-0">
         <div class="flex-1">
-            <h4 class="serif-title text-sm font-bold text-[#4A2312]">Experience Paramparra</h4>
-            <p class="text-[11px] text-[#8C847C] mt-0.5 leading-relaxed">Add to your home screen for quick access.</p>
+            <h4 class="serif-title text-sm font-bold text-[#4A2312]">Experience Parampara</h4>
+            <p class="text-[11px] text-[#8C847C] mt-0.5 leading-relaxed">Add our Premium Atelier to your home screen for quick lookbook access.</p>
             <div class="mt-3 flex items-center space-x-3">
                 <button @click="handleInstallClick()" class="bg-[#4A0E17] text-white text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-lg hover:bg-[#6B1824] transition duration-300">Install App</button>
                 <button @click="dismissPopup('later')" class="text-stone-400 hover:text-stone-600 text-[11px] font-medium tracking-wide">Later</button>
@@ -65,36 +65,36 @@
     </div>
 
     <div class="relative w-full rounded-[2.5rem] border border-[#6B1824] overflow-hidden bg-[#4A0E17] shadow-xl min-h-[16vh] flex items-center p-4 md:p-6">
-        <div class="relative z-10 grid grid-cols-2 md:grid-cols-3 items-center w-full max-w-7xl mx-auto px-2">
+        <div class="relative z-10 flex items-center justify-between w-full max-w-7xl mx-auto px-2">
             
-            <div class="hidden md:flex items-center justify-start">
+            <div class="hidden md:flex flex-1 items-center justify-start">
                 <a href="#" class="block hover:opacity-90 transition">
-                    <img src="Logosymbbg.png" alt="Paramparra Symbol" class="h-24 sm:h-28 w-auto object-contain">
+                    <img src="Logosymbbg.png" alt="Parampara Symbol" class="h-24 sm:h-28 w-auto object-contain">
                 </a>
             </div>
 
-            <div class="flex justify-start md:justify-center">
-                <img src="Logotextbg.png" alt="Paramparra - An Inheritance of Style" class="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto object-contain">
+            <div class="flex flex-shrink-0 justify-start md:justify-center">
+                <img src="Logotextbg.png" alt="Parampara - An Inheritance of Style" class="w-40 sm:w-56 md:w-full md:max-w-md h-auto object-contain">
             </div>
 
-            <div class="flex items-center justify-end space-x-4 sm:space-x-5">
-                <button @click="wishlistOpen = true" class="icon-btn group relative flex items-center h-14 px-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white hover:text-[#4A0E17] transition-all duration-300 shadow-sm cursor-pointer">
-                    <i class="fa-regular fa-heart text-2xl group-hover:scale-110 transition-transform"></i>
+            <div class="flex flex-1 items-center justify-end space-x-2 sm:space-x-5">
+                <button @click="wishlistOpen = true" class="icon-btn group relative flex items-center h-12 md:h-14 px-4 md:px-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white hover:text-[#4A0E17] transition-all duration-300 shadow-sm cursor-pointer">
+                    <i class="fa-regular fa-heart text-xl md:text-2xl group-hover:scale-110 transition-transform"></i>
                     <span class="label-text block text-[11px] font-bold uppercase tracking-[0.15em] ml-2.5 text-white group-hover:text-[#4A0E17] whitespace-nowrap overflow-hidden">Wishlist</span>
                     <span x-show="wishlist.length > 0" x-text="wishlist.length" x-transition.scale
                           class="absolute -top-1 -right-1 bg-[#D4AF37] text-[#4A0E17] text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold animate-pulse"></span>
                 </button>
 
-                <button @click="cartOpen = true" class="icon-btn group relative flex items-center h-14 px-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white hover:text-[#4A0E17] transition-all duration-300 shadow-sm cursor-pointer">
-                    <i class="fa-solid fa-bag-shopping text-2xl group-hover:scale-110 transition-transform"></i>
+                <button @click="cartOpen = true" class="icon-btn group relative flex items-center h-12 md:h-14 px-4 md:px-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-white hover:bg-white hover:text-[#4A0E17] transition-all duration-300 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-bag-shopping text-xl md:text-2xl group-hover:scale-110 transition-transform"></i>
                     <span class="label-text block text-[11px] font-bold uppercase tracking-[0.15em] ml-2.5 text-white group-hover:text-[#4A0E17] whitespace-nowrap overflow-hidden">Bag</span>
                     <span x-show="cart.length > 0" x-text="cart.length" x-transition.scale
                           class="absolute -top-1 -right-1 bg-white text-[#4A0E17] text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold shadow"></span>
                 </button>
             </div>
+            
         </div>
     </div>
-
     <nav class="sticky top-4 z-40 max-w-4xl mx-auto w-full mt-8 px-4 md:px-0">
         <div class="relative bg-white/80 backdrop-blur-xl border border-[#EAE4DC] p-1.5 rounded-full shadow-lg flex items-center justify-between overflow-x-auto scrollbar-none">
             <div class="absolute top-1.5 bottom-1.5 left-1.5 bg-[#4A0E17] rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] shadow-md"
@@ -336,12 +336,12 @@
     </div>
 
     <footer class="mt-24 py-10 border-t border-[#EAE4DC] text-center text-[10px] text-[#8C847C] uppercase tracking-[0.25em]">
-        <p class="serif-title text-[#4A2312] lowercase text-xl font-normal tracking-wide normal-case mb-2">Paramparra</p>
-        <p class="font-light normal-case tracking-normal">&copy; 2026 Paramparra Luxury Ethnic Collections. All rights reserved.</p>
+        <p class="serif-title text-[#4A2312] lowercase text-xl font-normal tracking-wide normal-case mb-2">Parampara</p>
+        <p class="font-light normal-case tracking-normal">&copy; 2026 Parampara Luxury Ethnic Collections. All rights reserved.</p>
     </footer>
 
     <script>
-        function ParamparraApp() {
+        function paramparaApp() {
             return {
                 mobileMenu: false,
                 cartOpen: false,
@@ -472,313 +472,4 @@
                         fabricInfo: "Premium Organic Slub Cotton", 
                         badge: "Bright Festive", 
                         narrative: "A radiant expression of classic design set against a warm, deep rust orange background. Features brilliant white chikankari vine embroidery tracing down the front layout panels, accompanied by a clean, fine lace bordered dupatta drape and matched straight-leg trousers.", 
-                        images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (8).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (5).jpeg"] 
-                    },
-                    { 
-                        id: 12, 
-                        title: "Pastel Geometry Floral A-Line Suit", 
-                        category: "Kurtis & Suits", 
-                        price: 2399, 
-                        fabricInfo: "Soft Breathable Mulmul Linen", 
-                        badge: "Boho Chic", 
-                        narrative: "Immaculate off-white structural canvas presenting a fresh approach to ethnic dress lookbooks. Detailed beautifully with unique cross-stitch diamond blocks alongside soft lavender and mint-green wildflower motifs sewn neatly across the chest panels and custom-trimmed hemlines.", 
-                        images: ["WhatsApp Image 2026-05-23 at 10.09.25 PM (2).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (4).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM.jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (5).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (6).jpeg"] 
-                    },
-                    { 
-                        id: 13, 
-                        title: "Gulistan Vibrant Embroidery Tunic Set", 
-                        category: "Co-ords", 
-                        price: 2499, 
-                        fabricInfo: "Premium Structured Khadi Cotton", 
-                        badge: "Atelier Edit", 
-                        narrative: "A signature structured off-white tunic shirt set matching contemporary fashion trends with ethnic craft loops. Features large, vividly dense hand-embroidery patterns framing the front panel and high-point shift collar, detailed with a playful hand-woven statement fringe lining along all hems.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.50 PM (2).jpeg", "WhatsApp Image 2026-05-24 at 11.42.51 PM (1).jpeg", "WhatsApp Image 2026-05-24 at 11.42.51 PM.jpeg", "WhatsApp Image 2026-05-24 at 11.42.51 PM (2).jpeg", "WhatsApp Image 2026-05-24 at 11.42.50 PM.jpeg", "WhatsApp Image 2026-05-24 at 11.42.50 PM (1).jpeg"] 
-                    },
-                    { 
-                        id: 14, 
-                        title: "Bagh-e-Kashni Scalloped Rose Co-ord Suit", 
-                        category: "Co-ords", 
-                        price: 2799, 
-                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
-                        badge: "Luxury Loungewear", 
-                        narrative: "The pinnacle of high-comfort luxury ethnic styling. Crafted with precise vertical pin-tucks along the shirt front and an elegant loose-fit button placket. The sleeve cuffs and high-low matching pants show off premium laser cutwork scalloped borders accented by lush rose motifs.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.51 PM (3).jpeg", "WhatsApp Image 2026-05-24 at 11.42.52 PM.jpeg", "WhatsApp Image 2026-05-24 at 11.42.52 PM2.jpeg", "WhatsApp Image 2026-05-24 at 11.42.52 PM3.jpeg"] 
-                    },
-                    { 
-                        id: 15, 
-                        title: "Persian Teal Luxe Printed Ensemble", 
-                        category: "Fusion & Prints", 
-                        price: 2899, 
-                        fabricInfo: "Fine Glazed Cotton Satin", 
-                        badge: "Artisan Pattern", 
-                        narrative: "An absolute stunning display of rich color symmetry. Draped in high-grade turquoise-teal handloom fabrics, it presents traditional block-print geometric bands intersecting beautiful side-panel extensions and heavy embroidery trim parameters.", 
-                        images: ["blue pakistani.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM1.jpeg"] 
-                    },
-                    { 
-                        id: 16, 
-                        title: "Royal Indigo Foliage Comfort Set", 
-                        category: "Fusion & Prints", 
-                        price: 2699, 
-                        fabricInfo: "Organic Premium Slub Linen Weave", 
-                        badge: "Bestseller", 
-                        narrative: "Understated casual refinement. Combining structural deep indigo blue solid tailoring borders on the collar profile alongside a breezy cream dupatta shawl layer showing off cascading abstract leaf details.", 
-                        images: ["bluew.jpeg", "blue w.jpeg"] 
-                    },
-                    { 
-                        id: 17, 
-                        title: "Desert Earth Terracotta Motif Suit", 
-                        category: "Fusion & Prints", 
-                        price: 2499, 
-                        fabricInfo: "Luxe Combed Mulmul Cotton", 
-                        badge: "Trending Print", 
-                        narrative: "Immerse your rotation into warm rich ochre-rust earthen tones. Detailed gracefully with an embellished mirror work front scoop neck layout and delicate hanging strings, accompanied by multi-angle design previews.", 
-                        images: ["rust.jpeg", "rusty.jpeg", "blue rust.jpeg"] 
-                    },
-                    { 
-                        id: 18, 
-                        title: "Crimson & Indigo Ajrakh Heritage Set", 
-                        category: "Fusion & Prints", 
-                        price: 3299, 
-                        fabricInfo: "Premium Organic Cotton Slub", 
-                        badge: "Heritage Luxe", 
-                        narrative: "A masterful presentation of ancient block printing art. Crafted in rich madder crimson red and deep indigo tones, this straight panel designer set features geometric tiles highlighted with subtle mirror accents, a rich printed pant coordinate, and a matching full-length soft drape dupatta.", 
-                        images: ["WhatsApp Image 2026-05-24 at 10.34.17 PM.jpeg", "WhatsApp Image 2026-05-24 at 10.34.17 PM2.jpeg", "WhatsApp Image 2026-05-24 at 10.34.18 PM3.jpeg", "WhatsApp Image 2026-05-24 at 10.34.14 PM1.jpeg"] 
-                    },
-                    { 
-                        id: 19, 
-                        title: "Olive Marigold Pakistani Kurti Set", 
-                        category: "Festive Wear", 
-                        price: 2999, 
-                        fabricInfo: "Luxe Combed Handloom Cotton", 
-                        badge: "Elegant Flair", 
-                        narrative: "Understated festive opulence brought to life on a clean off-white canvas. Accented beautifully with refreshing olive green floral block-prints, an elegant scalloped lace frame running along the button placket, and loose statement sleeves finished with loop crochet laces.", 
-                        images: ["yellowpakistani.jpeg", "ypk.jpeg"] 
-                    },
-                    { 
-                        id: 20, 
-                        title: "Vrindavan Peacock Kalamkari Suit Set", 
-                        category: "Fusion & Prints", 
-                        price: 3199, 
-                        fabricInfo: "Premium Glazed Cambric Cotton", 
-                        badge: "Artisan Heritage", 
-                        narrative: "A breathtaking celebration of Indian block arts. Draped in rich forest-moss green, the kurti body frames an intricate rectangular mirror-work and embroidery yoke deck. Paired beautifully with a gorgeous contrast gold-mustard dupatta showcasing fluid mythological Kalamkari prints.", 
-                        images: ["gy.jpeg", "g1.jpeg", "green yellow.jpeg"] 
-                    },
-                    { 
-                        id: 21, 
-                        title: "Ochre Mustard Geometric Anarkali Set", 
-                        category: "Festive Wear", 
-                        price: 3499, 
-                        fabricInfo: "Premium Handloom Slub Cotton Silk", 
-                        badge: "Festive Flair", 
-                        narrative: "Exude elegant festive grandeur with this rich mustard-gold ensemble. Features a structured multi-paneled A-line flare accented with micro-embroidery borders on the split V-neckline. Accompanied by a lightweight beige dupatta displaying bold, geo-themed circular patterns.", 
-                        images: ["WhatsApp Image 2026-05-13 at 5.20.54 PM.jpeg", "WhatsApp Image 2026-05-13 at 5.20.55 PM2.jpeg"] 
-                    },
-                    { 
-                        id: 22, 
-                        title: "Earthy Terracotta Geometric A-Line Set", 
-                        category: "Kurtis & Suits", 
-                        price: 2899, 
-                        fabricInfo: "Fine Breathable Cotton Linen Weave", 
-                        badge: "New Arrival", 
-                        narrative: "A clean contemporary layout balancing rustic autumn tones. Styled into a structured longline A-frame kurta body with micro lace trimmings, offset perfectly by an artistic abstract block-print dupatta highlighting earthy circular geometry layers.", 
-                        images: ["WhatsApp Image 2026-05-13 at 5.20.55 PM.jpeg"] 
-                    },
-                    { 
-                        id: 23, 
-                        title: "Gul-e-Miriam Silk Gathered Set", 
-                        category: "Festive Wear", 
-                        price: 3699, 
-                        fabricInfo: "Luxury Handloom Slub Chanderi Silk", 
-                        badge: "Premium Festive", 
-                        narrative: "An opulent, highly structured silhouette framed with rich keri-paisley thread embroidery and distinct front mirror placements. Featuring delicate gathered pleating transitions across the waistline panel, this masterpiece comes equipped with a sheer coordinating soft weave dupatta drape.", 
-                        images: ["maroon.jpeg", "mb4.jpeg", "black.jpeg", "mb1.jpeg", "mb2.jpeg", "black2.jpeg"] 
-                    },
-                    { 
-                        id: 24, 
-                        title: "Cocoa Blossom Deep V-Neck Suit", 
-                        category: "Kurtis & Suits", 
-                        price: 2999, 
-                        fabricInfo: "Fine Breathable Cotton Khadi", 
-                        badge: "Artisan Embroidery", 
-                        narrative: "Understated bohemian luxury engineered for standard daily versatility. Flaunts a plunging crossover deep V-neckline highlighted by dense dark chocolate flora motifs and small running booti elements scattered elegantly across the central panels.", 
-                        images: ["b3.jpeg", "b1.jpeg", "brownie.jpeg"] 
-                    },
-                    { 
-                        id: 25, 
-                        title: "Gul-e-Anar Flared Anarkali Set", 
-                        category: "Festive Wear", 
-                        price: 3599, 
-                        fabricInfo: "Premium Breathable Mulmul Weave", 
-                        badge: "Luxury Volume", 
-                        narrative: "A total romantic dreamscape built on a soft powder-pink canvas. Boasts an impressive paneled tiered skirt flare decorated with rose and botanical motifs. The bodice features an embroidered chevron yoke, premium contrast potli buttons, and delicate lace insertions along the sleeve seams.", 
-                        images: ["WhatsApp Image 2026-05-19 at 10.50.01 PM5.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM3.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM2.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM4.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM.jpeg"] 
-                    },
-                    { 
-                        id: 26, 
-                        title: "Vasanta Marigold Gathered Suit", 
-                        category: "Festive Wear", 
-                        price: 3199, 
-                        fabricInfo: "Luxe Combed Cotton Satin Blend", 
-                        badge: "Festive Bloom", 
-                        narrative: "Channel radiant seasonal energy with this high-comfort celebratory silhouette. Styled in a deep golden marigold yellow, it highlights dense green and white floral vines chain-stitched along the scalloped V-neckline, matched neatly with a beautiful hand-painted motif dupatta layer.", 
-                        images: ["yellow2.jpeg", "yellow.jpeg"] 
-                    },
-                    { 
-                        id: 27, 
-                        title: "Jasmine Bouquet Crocheted Lace Kurti", 
-                        category: "Kurtis & Suits", 
-                        price: 2299, 
-                        fabricInfo: "Soft Organic Slub Cotton Linen", 
-                        badge: "Minimalist Luxe", 
-                        narrative: "Celebrate pure elegance with this crisp, ivory-toned longline kurti. Embellished with delicate pastel lilac floral branch embroidery panels over the high yoke area and sleeve openings, framed securely by vertical pin-tucks and transparent geometric insert laces.", 
-                        images: ["white.jpeg", "white2.jpeg"] 
-                    },
-                    { 
-                        id: 28, 
-                        title: "Fuchsia Meadow Embroidery Set", 
-                        category: "Kurtis & Suits", 
-                        price: 2499, 
-                        fabricInfo: "Premium Fine Cambric Mulmul", 
-                        badge: "Vibrant Print", 
-                        narrative: "A pop of saturated pink to brighten up everyday ethnic styling. This premium set is layered with dense white and soft rose botanical chain stitching running down the scalloped V-neckline border, balanced with comfortable lace-trimmed wide palazzo trousers.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"] 
-                    },
-                    { 
-                        id: 29, 
-                        title: "Lilac Dream Linear Stitch Set", 
-                        category: "Kurtis & Suits", 
-                        price: 2199, 
-                        fabricInfo: "Lightweight Breathable Khadi-Linen", 
-                        badge: "Casual Glamour", 
-                        narrative: "A beautifully fresh concept design for hot summer days. Draped in soft orchid lavender pink, the front panel features structured vertical white stripe stitching, scattered mini star motifs, and an architectural split-neck opening paired with contrasting solid ivory trousers.", 
-                        images: ["whitepink.jpeg"] 
-                    },
-                    { 
-                        id: 30, 
-                        title: "Gul-e-Firoz Turquoise Block Print Set", 
-                        category: "Fusion & Prints", 
-                        price: 2799, 
-                        fabricInfo: "Fine Breathable Handloom Cotton", 
-                        badge: "Artisan Edit", 
-                        narrative: "An immersive exploration of traditional block patterns set across a striking turquoise backdrop. Accented with dense, multi-tiered floral borders framing the side seams and comfortable straight trousers, complete with a beautifully coordinated sheer drape dupatta shawl layer.", 
-                        images: ["WhatsApp Image 2026-05-11 at 2.04.14 PM.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM6.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM2.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM5.jpeg"] 
-                    },
-                    { 
-                        id: 31, 
-                        title: "Madhubani Rose Hand-Block Suit Set", 
-                        category: "Kurtis & Suits", 
-                        price: 2499, 
-                        fabricInfo: "Soft Organic Slub Cotton Weave", 
-                        badge: "Trending Blush", 
-                        narrative: "Understated casual refinement centered around romantic pastel pinks. Showcases intricate ivory lace insert loops mapping down the front placket, accompanied by a beautifully soft patterned dupatta drape layout.", 
-                        images: ["pink.jpeg", "pink2.jpeg", "pinkw.jpeg"] 
-                    }
-                ],
-
-                init() {
-                    this.$nextTick(() => { this.updatePillPosition(0); });
-
-                    // 1. Listen for browser engine PWA compatibility framework
-                    window.addEventListener('beforeinstallprompt', (e) => {
-                        e.preventDefault();
-                        this.deferredPrompt = e;
-                    });
-
-                    // 2. Automated Trigger: Show custom modal 3 seconds after page loading
-                    setTimeout(() => {
-                        const isDismissed = localStorage.getItem('Paramparra_pwa_dismissed');
-                        if (!isDismissed) {
-                            this.showPwaPopup = true;
-                        }
-                    }, 3000);
-
-                    window.addEventListener('appinstalled', () => {
-                        this.showPwaPopup = false;
-                        this.deferredPrompt = null;
-                        localStorage.setItem('Paramparra_pwa_dismissed', 'true');
-                    });
-                },
-                handleInstallClick() {
-                    if (this.deferredPrompt) {
-                        this.deferredPrompt.prompt();
-                        this.deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
-                                localStorage.setItem('Paramparra_pwa_dismissed', 'true');
-                                this.showPwaPopup = false;
-                            }
-                            this.deferredPrompt = null;
-                        });
-                    } else {
-                        // Intelligent dynamic help overlay based on device structure
-                        const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                        if (isiOS) {
-                            alert("To install Paramparra App:\n1. Tap the Share button at the bottom of Safari.\n2. Scroll down and choose 'Add to Home Screen'.");
-                        } else {
-                            alert("To install Paramparra App on your device:\nClick your browser's menu option (3 vertical dots ┇ near top/bottom right) and select 'Install app' or 'Add to Home screen'.");
-                        }
-                        this.dismissPopup('installed-fallback');
-                    }
-                },
-                dismissPopup(reason) {
-                    this.showPwaPopup = false;
-                    if (reason === 'later' || reason === 'installed-fallback') {
-                        localStorage.setItem('Paramparra_pwa_dismissed', 'true');
-                    }
-                },
-                switchCategory(cat, index) {
-                    this.selectedCategory = cat;
-                    this.activeIndex = index;
-                    this.updatePillPosition(index);
-                    this.scrollToCatalog();
-                },
-                updatePillPosition(index) {
-                    const btn = document.getElementById('cat-btn-' + index);
-                    if (btn) {
-                        this.pillWidth = btn.offsetWidth;
-                        this.pillLeft = btn.offsetLeft;
-                    }
-                },
-                getPillStyles() {
-                    return `width: ${this.pillWidth}px; left: ${this.pillLeft}px;`;
-                },
-                filteredItems() {
-                    return this.catalogData.filter(unit => this.selectedCategory === 'All' || unit.category === this.selectedCategory);
-                },
-                scrollToCatalog() {
-                    document.getElementById('catalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                },
-                triggerQuickView(unit) {
-                    this.focusedUnit = unit;
-                    this.modalActiveIndex = 0;
-                    this.quickViewActive = true;
-                },
-                insertIntoCart(unit, size) {
-                    this.cart.push({ id: unit.id, title: unit.title, price: unit.price, image: unit.images[0], size: size });
-                    this.quickViewActive = false;
-                    this.cartOpen = true;
-                },
-                removeLineItem(idx) { this.cart.splice(idx, 1); },
-                totalCalculation() { return this.cart.reduce((acc, item) => acc + item.price, 0); },
-                toggleWishlist(unit) {
-                    const idx = this.wishlist.findIndex(w => w.id === unit.id);
-                    if (idx > -1) this.wishlist.splice(idx, 1);
-                    else this.wishlist.push(unit);
-                },
-                isWishlisted(id) { return this.wishlist.some(w => w.id === id); },
-                sendWhatsAppOrder(unit, size) {
-                    window.open(`https://wa.me/919810198271?text=Order%20${encodeURIComponent(unit.title)}`, '_blank');
-                },
-                checkoutBulkWhatsApp() {
-                    let message = "Hello Paramparra, I would like to order the following items from the Lookbook Portfolio:\n\n";
-                    this.cart.forEach((item, index) => {
-                        message += `${index + 1}. ${item.title} (Size: ${item.size}) - ₹${item.price.toLocaleString('en-IN')}\n`;
-                    });
-                    message += `\nTotal Estimated: ₹${this.totalCalculation().toLocaleString('en-IN')}`;
-                    window.open(`https://wa.me/919810198271?text=${encodeURIComponent(message)}`, '_blank');
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+                        images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (8).jpeg", "WhatsApp
