@@ -95,6 +95,7 @@
             
         </div>
     </div>
+
     <nav class="sticky top-4 z-40 max-w-4xl mx-auto w-full mt-8 px-4 md:px-0">
         <div class="relative bg-white/80 backdrop-blur-xl border border-[#EAE4DC] p-1.5 rounded-full shadow-lg flex items-center justify-between overflow-x-auto scrollbar-none">
             <div class="absolute top-1.5 bottom-1.5 left-1.5 bg-[#4A0E17] rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] shadow-md"
@@ -347,7 +348,9 @@
                 cartOpen: false,
                 wishlistOpen: false,
                 quickViewActive: false,
-                selectedCategory: 'All',
+                
+                // Updated: Default active category
+                selectedCategory: 'Festive Wear',
                 activeIndex: 0,
                 chosenSize: 'M',
                 focusedUnit: null,
@@ -359,12 +362,11 @@
                 showPwaPopup: false,
                 deferredPrompt: null,
                 
-                groupCategories: ['All', 'Festive Wear', 'Kurtis & Suits', 'Co-ords', 'Fusion & Prints'],
+                groupCategories: ['All', 'Kurtis & Suits', 'Festive Wear', 'Co-ords', 'Fusion & Prints'],
                 cart: [],
                 wishlist: [],
                 
                 catalogData: [
-                    // --- FESTIVE WEAR ---
                     { 
                         id: 11, 
                         title: "Desert Sunset Chikankari Luxe Set", 
@@ -526,6 +528,36 @@
                         badge: "Summer Bloom", 
                         narrative: "Evoke seasonal romance with this serene blush pink setup draped in premium cotton. Styled beautifully with grand, over-scaled magenta rose motifs across the body, a neat hand-crafted front placket trim, and a lightweight coordinated print dupatta shawl layer.", 
                         images: ["WhatsApp Image 2026-05-18 at 6.22.04 PMpink.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PMp2.jpeg"] 
+                    },
+                    { 
+                        id: 9, 
+                        title: "Noir Charcoal Ajrakh Tassel Set", 
+                        category: "Festive Wear", 
+                        price: 3199, 
+                        fabricInfo: "Premium Handloom Khadi Cotton", 
+                        badge: "Artisan Craft", 
+                        narrative: "A bold heritage regular set crafted with intricate block layouts and earthy geometric motifs. Framed by a beautifully embroidered square-cut mirror lace neckline accented with handmade thread tassels, completed by a rich crimson-accented pallu design.", 
+                        images: ["WhatsApp Image 2026-05-18 at 6.22.04 PM.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM1.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM2.jpeg"] 
+                    },
+                    { 
+                        id: 10, 
+                        title: "Classic Sage Shadow Booti Chanderi Set", 
+                        category: "Festive Wear", 
+                        price: 2799, 
+                        fabricInfo: "Pure Chanderi Silk Cotton Blend", 
+                        badge: "New Arrival", 
+                        narrative: "Understated ethnic grace defined by an elegant slate-grey canvas. Embellished with immaculate silver-white chikan lace inserts and tiny self-booti embroidery arrays across the fabric body, paired with clean mid-rise straight trousers. Showcases subtle design elements highlighted through alternate store mannequin postures.", 
+                        images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (9).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (6).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (4).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM.jpeg"] 
+                    },
+                    { 
+                        id: 11, 
+                        title: "Desert Sunset Chikankari Luxe Set", 
+                        category: "Festive Wear", 
+                        price: 2999, 
+                        fabricInfo: "Premium Organic Slub Cotton", 
+                        badge: "Bright Festive", 
+                        narrative: "A radiant expression of classic design set against a warm, deep rust orange background. Features brilliant white chikankari vine embroidery tracing down the front layout panels, accompanied by a clean, fine lace bordered dupatta drape and matched straight-leg trousers.", 
+                        images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (8).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (5).jpeg"] 
                     },
                     { 
                         id: 12, 
