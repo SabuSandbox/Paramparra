@@ -95,6 +95,7 @@
             
         </div>
     </div>
+
     <nav class="sticky top-4 z-40 max-w-4xl mx-auto w-full mt-8 px-4 md:px-0">
         <div class="relative bg-white/80 backdrop-blur-xl border border-[#EAE4DC] p-1.5 rounded-full shadow-lg flex items-center justify-between overflow-x-auto scrollbar-none">
             <div class="absolute top-1.5 bottom-1.5 left-1.5 bg-[#4A0E17] rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] shadow-md"
@@ -347,7 +348,9 @@
                 cartOpen: false,
                 wishlistOpen: false,
                 quickViewActive: false,
-                selectedCategory: 'All',
+                
+                // Updated: Default active category
+                selectedCategory: 'Festive Wear',
                 activeIndex: 0,
                 chosenSize: 'M',
                 focusedUnit: null,
@@ -359,11 +362,23 @@
                 showPwaPopup: false,
                 deferredPrompt: null,
                 
-                groupCategories: ['All', 'Kurtis & Suits', 'Festive Wear', 'Co-ords', 'Fusion & Prints'],
+                // Updated: Category order
+                groupCategories: ['Festive Wear', 'All', 'Kurtis & Suits', 'Co-ords', 'Fusion & Prints'],
                 cart: [],
                 wishlist: [],
                 
                 catalogData: [
+                    // Updated: Moved Desert Sunset Chikankari Luxe Set to the top
+                    { 
+                        id: 11, 
+                        title: "Desert Sunset Chikankari Luxe Set", 
+                        category: "Festive Wear", 
+                        price: 2999, 
+                        fabricInfo: "Premium Organic Slub Cotton", 
+                        badge: "Bright Festive", 
+                        narrative: "A radiant expression of classic design set against a warm, deep rust orange background. Features brilliant white chikankari vine embroidery tracing down the front layout panels, accompanied by a clean, fine lace bordered dupatta drape and matched straight-leg trousers.", 
+                        images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (8).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (5).jpeg"] 
+                    },
                     { 
                         id: 1, 
                         title: "Scarlet Hearts Handloom Slub Set", 
@@ -463,16 +478,6 @@
                         badge: "New Arrival", 
                         narrative: "Understated ethnic grace defined by an elegant slate-grey canvas. Embellished with immaculate silver-white chikan lace inserts and tiny self-booti embroidery arrays across the fabric body, paired with clean mid-rise straight trousers. Showcases subtle design elements highlighted through alternate store mannequin postures.", 
                         images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (9).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (6).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (4).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM.jpeg"] 
-                    },
-                    { 
-                        id: 11, 
-                        title: "Desert Sunset Chikankari Luxe Set", 
-                        category: "Festive Wear", 
-                        price: 2999, 
-                        fabricInfo: "Premium Organic Slub Cotton", 
-                        badge: "Bright Festive", 
-                        narrative: "A radiant expression of classic design set against a warm, deep rust orange background. Features brilliant white chikankari vine embroidery tracing down the front layout panels, accompanied by a clean, fine lace bordered dupatta drape and matched straight-leg trousers.", 
-                        images: ["WhatsApp Image 2026-05-23 at 9.24.25 PM (8).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 9.24.25 PM (5).jpeg"] 
                     },
                     { 
                         id: 12, 
