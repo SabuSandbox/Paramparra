@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parampara - The Ethnic Wear | Premium Atelier</title>
+    <title>Paramparra - An Inheritance of Style</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,8 +41,9 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-6 lg:p-8 min-h-screen flex flex-col justify-between" x-data="paramparaApp()">
+<body class="p-4 md:p-6 lg:p-8 min-h-screen flex flex-col justify-between" x-data="ParamparraApp()">
 
+  <!-- Custom Website Promotion / PWA Popup -->
     <div x-show="showPwaPopup" 
          x-transition:enter="transition ease-out duration-500 transform"
          x-transition:enter-start="translate-y-20 opacity-0"
@@ -52,16 +53,16 @@
          x-transition:leave-end="translate-y-20 opacity-0"
          class="fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:max-w-sm bg-white border border-[#EAE4DC] shadow-2xl rounded-2xl p-4 z-50 flex items-start space-x-4" 
          x-cloak>
-        <img src="Logoicon.png" alt="Parampara App" class="w-12 h-12 rounded-xl object-cover border border-[#4A0E17]/10 flex-shrink-0">
+        <img src="Logoicon.png" alt="Paramparra App" class="w-12 h-12 rounded-xl object-cover border border-[#4A0E17]/10 flex-shrink-0">
         <div class="flex-1">
-            <h4 class="serif-title text-sm font-bold text-[#4A2312]">Experience Parampara</h4>
+            <h4 class="serif-title text-sm font-bold text-[#4A2312]">Experience Paramparra</h4>
             <p class="text-[11px] text-[#8C847C] mt-0.5 leading-relaxed">Add our Premium Atelier to your home screen for quick lookbook access.</p>
             <div class="mt-3 flex items-center space-x-3">
-                <button @click="installPwa()" class="bg-[#4A0E17] text-white text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-lg hover:bg-[#6B1824] transition duration-300">Install</button>
-                <button @click="showPwaPopup = false" class="text-stone-400 hover:text-stone-600 text-[11px] font-medium tracking-wide">Later</button>
+                <button @click="handleInstallClick()" class="bg-[#4A0E17] text-white text-[10px] uppercase font-bold tracking-widest px-4 py-2 rounded-lg hover:bg-[#6B1824] transition duration-300">Install App</button>
+                <button @click="dismissPopup('later')" class="text-stone-400 hover:text-stone-600 text-[11px] font-medium tracking-wide">Later</button>
             </div>
         </div>
-        <button @click="showPwaPopup = false" class="text-stone-300 hover:text-stone-500 transition"><i class="fa-solid fa-xmark text-xs"></i></button>
+        <button @click="dismissPopup('close')" class="text-stone-300 hover:text-stone-500 transition"><i class="fa-solid fa-xmark text-xs"></i></button>
     </div>
 
     <div class="relative w-full rounded-[2.5rem] border border-[#6B1824] overflow-hidden bg-[#4A0E17] shadow-xl min-h-[16vh] flex items-center p-4 md:p-6">
@@ -69,12 +70,12 @@
             
             <div class="hidden md:flex items-center justify-start">
                 <a href="#" class="block hover:opacity-90 transition">
-                    <img src="Logosymbbg.png" alt="Parampara Symbol" class="h-24 sm:h-28 w-auto object-contain">
+                    <img src="Logosymbbg.png" alt="Paramparra Symbol" class="h-24 sm:h-28 w-auto object-contain">
                 </a>
             </div>
 
             <div class="flex justify-start md:justify-center">
-                <img src="Logotextbg.png" alt="Parampara - An Inheritance of Style" class="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto object-contain">
+                <img src="Logotextbg.png" alt="Paramparra - An Inheritance of Style" class="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto object-contain">
             </div>
 
             <div class="flex items-center justify-end space-x-4 sm:space-x-5">
@@ -336,12 +337,12 @@
     </div>
 
     <footer class="mt-24 py-10 border-t border-[#EAE4DC] text-center text-[10px] text-[#8C847C] uppercase tracking-[0.25em]">
-        <p class="serif-title text-[#4A2312] lowercase text-xl font-normal tracking-wide normal-case mb-2">Parampara</p>
-        <p class="font-light normal-case tracking-normal">&copy; 2026 Parampara Luxury Ethnic Collections. All rights reserved.</p>
+        <p class="serif-title text-[#4A2312] lowercase text-xl font-normal tracking-wide normal-case mb-2">Paramparra</p>
+        <p class="font-light normal-case tracking-normal">&copy; 2026 Paramparra Luxury Ethnic Collections. All rights reserved.</p>
     </footer>
 
     <script>
-        function paramparaApp() {
+        function ParamparraApp() {
             return {
                 mobileMenu: false,
                 cartOpen: false,
@@ -744,7 +745,7 @@
                     window.open(`https://wa.me/919810198271?text=Order%20${encodeURIComponent(unit.title)}`, '_blank');
                 },
                 checkoutBulkWhatsApp() {
-                    let message = "Hello Parampara, I would like to order the following items from the Lookbook Portfolio:\n\n";
+                    let message = "Hello Paramparra, I would like to order the following items from the Lookbook Portfolio:\n\n";
                     this.cart.forEach((item, index) => {
                         message += `${index + 1}. ${item.title} (Size: ${item.size}) - ₹${item.price.toLocaleString('en-IN')}\n`;
                     });
