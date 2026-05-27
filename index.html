@@ -8,6 +8,9 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
     <link rel="apple-touch-icon" href="Logoicon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#4A0E17">
@@ -64,6 +67,7 @@
         <button @click="dismissPopup('close')" class="text-stone-300 hover:text-stone-500 transition"><i class="fa-solid fa-xmark text-xs"></i></button>
     </div>
 
+    <!-- RESPONSIVE HEADER -->
     <div class="relative w-full rounded-[2.5rem] border border-[#6B1824] overflow-hidden bg-[#4A0E17] shadow-xl min-h-[16vh] flex items-center p-4 md:p-6">
         <div class="relative z-10 flex items-center justify-between w-full max-w-7xl mx-auto px-2">
             
@@ -92,9 +96,9 @@
                           class="absolute -top-1 -right-1 bg-white text-[#4A0E17] text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold shadow"></span>
                 </button>
             </div>
-            
         </div>
     </div>
+
     <nav class="sticky top-4 z-40 max-w-4xl mx-auto w-full mt-8 px-4 md:px-0">
         <div class="relative bg-white/80 backdrop-blur-xl border border-[#EAE4DC] p-1.5 rounded-full shadow-lg flex items-center justify-between overflow-x-auto scrollbar-none">
             <div class="absolute top-1.5 bottom-1.5 left-1.5 bg-[#4A0E17] rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] shadow-md"
@@ -161,47 +165,55 @@
         </div>
     </main>
 
+    <!-- UPDATED MOBILE-FRIENDLY QUICK VIEW MODAL -->
     <div x-show="quickViewActive" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak>
         <div class="fixed inset-0 bg-[#2D2A26]/40 backdrop-blur-sm" @click="quickViewActive = false"
              x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
-        <div class="bg-[#FCFBF9] border border-[#EAE4DC] max-w-4xl w-full rounded-2xl relative flex flex-col md:flex-row overflow-hidden z-10 shadow-2xl" 
+        
+        <div class="bg-[#FCFBF9] border border-[#EAE4DC] max-w-4xl w-full max-h-[90vh] rounded-2xl relative flex flex-col overflow-hidden z-10 shadow-2xl" 
              @click.outside="quickViewActive = false"
              x-transition:enter="transition ease-out duration-400 transform" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0"
              x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="opacity-100 scale-100 translate-y-0" x-transition:leave-end="opacity-0 scale-95 translate-y-4">
             
-            <button @click="quickViewActive = false" class="absolute top-4 right-4 z-20 text-[#2D2A26] bg-white/80 p-2 rounded-full shadow border border-[#EAE4DC] hover:bg-[#4A0E17] hover:text-white transition-colors duration-300">
+            <button @click="quickViewActive = false" class="absolute top-4 right-4 z-30 text-[#2D2A26] bg-white/90 backdrop-blur-md p-2.5 rounded-full shadow-md border border-[#EAE4DC] hover:bg-[#4A0E17] hover:text-white transition-colors duration-300">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             
-            <div class="w-full md:w-1/2 p-4 bg-[#F4EFEA]/40 flex flex-col justify-between">
-                <div class="aspect-[3/4] w-full overflow-hidden rounded-xl bg-white shadow-xs">
-                    <img :src="focusedUnit?.images[modalActiveIndex]" class="w-full h-full object-cover object-top transition duration-300">
+            <div class="flex flex-col md:flex-row w-full h-full overflow-y-auto custom-scrollbar">
+                
+                <div class="w-full md:w-1/2 p-4 bg-[#F4EFEA]/40 flex flex-col justify-between">
+                    <div class="aspect-[3/4] w-full overflow-hidden rounded-xl bg-white shadow-xs">
+                        <img :src="focusedUnit?.images[modalActiveIndex]" class="w-full h-full object-cover object-top transition duration-300">
+                    </div>
+                    <div class="flex items-center space-x-2 mt-4 overflow-x-auto pb-1">
+                        <template x-for="(photo, index) in focusedUnit?.images" :key="index">
+                            <button @click="modalActiveIndex = index"
+                                    :class="modalActiveIndex === index ? 'ring-2 ring-[#4A0E17] scale-102 border-transparent' : 'border-[#EAE4DC] opacity-60 hover:opacity-100'"
+                                    class="w-14 h-20 border rounded-lg overflow-hidden bg-white transition-all flex-shrink-0">
+                                <img :src="photo" class="w-full h-full object-cover object-top">
+                            </button>
+                        </template>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-2 mt-4 overflow-x-auto pb-1">
-                    <template x-for="(photo, index) in focusedUnit?.images" :key="index">
-                        <button @click="modalActiveIndex = index"
-                                :class="modalActiveIndex === index ? 'ring-2 ring-[#4A0E17] scale-102 border-transparent' : 'border-[#EAE4DC] opacity-60 hover:opacity-100'"
-                                class="w-14 h-20 border rounded-lg overflow-hidden bg-white transition-all flex-shrink-0">
-                            <img :src="photo" class="w-full h-full object-cover object-top">
-                        </button>
-                    </template>
-                </div>
-            </div>
 
-            <div class="w-full md:w-1/2 p-8 flex flex-col justify-between bg-white">
-                <div>
-                    <span class="text-[9px] uppercase tracking-[0.25em] text-[#9E7356] font-bold block mb-1" x-text="focusedUnit?.category"></span>
-                    <h2 class="serif-title text-2xl text-[#4A2312] mb-2" x-text="focusedUnit?.title"></h2>
-                    <p class="text-xl font-bold text-[#4A0E17] mb-4" x-text="'₹' + focusedUnit?.price.toLocaleString('en-IN')"></p>
-                    <hr class="border-[#EAE4DC] my-4">
-                    <p class="text-xs text-[#5C544C] mb-6 font-normal leading-relaxed tracking-wide" x-text="focusedUnit?.narrative"></p>
+                <div class="w-full md:w-1/2 p-5 md:p-8 flex flex-col justify-between bg-white">
+                    <div>
+                        <span class="text-[9px] uppercase tracking-[0.25em] text-[#9E7356] font-bold block mb-1" x-text="focusedUnit?.category"></span>
+                        <h2 class="serif-title text-2xl text-[#4A2312] mb-2" x-text="focusedUnit?.title"></h2>
+                        <p class="text-xl font-bold text-[#4A0E17] mb-4" x-text="'₹' + focusedUnit?.price.toLocaleString('en-IN')"></p>
+                        <hr class="border-[#EAE4DC] my-4">
+                        <p class="text-xs text-[#5C544C] mb-6 font-normal leading-relaxed tracking-wide" x-text="focusedUnit?.narrative"></p>
+                    </div>
+                    <button @click="insertIntoCart(focusedUnit, chosenSize)" class="w-full mt-4 bg-[#4A0E17] text-white text-[10px] uppercase tracking-widest font-bold py-4 rounded-xl shadow hover:bg-[#6B1824] transition duration-300 transform active:scale-98">
+                        Add to Shopping Bag
+                    </button>
                 </div>
-                <button @click="insertIntoCart(focusedUnit, chosenSize)" class="w-full bg-[#4A0E17] text-white text-[10px] uppercase tracking-widest font-bold py-4 rounded-xl shadow hover:bg-[#6B1824] transition duration-300 transform active:scale-98">Add to Shopping Bag</button>
             </div>
         </div>
     </div>
 
+    <!-- CART PANEL -->
     <div x-show="cartOpen" class="fixed inset-0 z-50 overflow-hidden" x-cloak>
         <div class="absolute inset-0 bg-[#2D2A26]/40 backdrop-blur-xs transition-opacity" 
              @click="cartOpen = false"
@@ -266,15 +278,18 @@
                         <span class="font-bold text-[#4A0E17]" x-text="'₹' + totalCalculation().toLocaleString('en-IN')"></span>
                     </div>
                     <p class="text-[11px] text-[#8C847C] mb-6 leading-normal normal-case italic font-medium">Taxes and premium shipping logistics curated dynamically at fulfillment.</p>
-                    <button @click="checkoutBulkWhatsApp()" class="w-full bg-[#4A0E17] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow hover:bg-[#6B1824] transition duration-300 transform active:scale-98 flex items-center justify-center space-x-2">
-                        <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Send Order to WhatsApp</span>
+                    
+                    <!-- UPDATED: RAZORPAY CHECKOUT BUTTON -->
+                    <button @click="processRazorpayCheckout()" class="w-full bg-[#4A0E17] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow hover:bg-[#6B1824] transition duration-300 transform active:scale-98 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-credit-card text-lg"></i>
+                        <span>Proceed to Secure Checkout</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- WISHLIST PANEL -->
     <div x-show="wishlistOpen" class="fixed inset-0 z-50 overflow-hidden" x-cloak>
         <div class="absolute inset-0 bg-[#2D2A26]/40 backdrop-blur-xs transition-opacity" 
              @click="wishlistOpen = false"
@@ -355,7 +370,6 @@
                 pillWidth: 0,
                 pillLeft: 0,
                 
-                // PWA States
                 showPwaPopup: false,
                 deferredPrompt: null,
                 
@@ -682,13 +696,12 @@
                 init() {
                     this.$nextTick(() => { this.updatePillPosition(0); });
 
-                    // 1. Listen for browser engine PWA compatibility framework
+                    // PWA prompt logic
                     window.addEventListener('beforeinstallprompt', (e) => {
                         e.preventDefault();
                         this.deferredPrompt = e;
                     });
 
-                    // 2. Automated Trigger: Show custom modal 3 seconds after page loading
                     setTimeout(() => {
                         const isDismissed = localStorage.getItem('parampara_pwa_dismissed');
                         if (!isDismissed) {
@@ -713,7 +726,6 @@
                             this.deferredPrompt = null;
                         });
                     } else {
-                        // Intelligent dynamic help overlay based on device structure
                         const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
                         if (isiOS) {
                             alert("To install Parampara App:\n1. Tap the Share button at the bottom of Safari.\n2. Scroll down and choose 'Add to Home Screen'.");
@@ -769,16 +781,76 @@
                     else this.wishlist.push(unit);
                 },
                 isWishlisted(id) { return this.wishlist.some(w => w.id === id); },
-                sendWhatsAppOrder(unit, size) {
-                    window.open(`https://wa.me/919810198271?text=Order%20${encodeURIComponent(unit.title)}`, '_blank');
-                },
-                checkoutBulkWhatsApp() {
-                    let message = "Hello Parampara, I would like to order the following items from the Lookbook Portfolio:\n\n";
-                    this.cart.forEach((item, index) => {
-                        message += `${index + 1}. ${item.title} (Size: ${item.size}) - ₹${item.price.toLocaleString('en-IN')}\n`;
-                    });
-                    message += `\nTotal Estimated: ₹${this.totalCalculation().toLocaleString('en-IN')}`;
-                    window.open(`https://wa.me/919810198271?text=${encodeURIComponent(message)}`, '_blank');
+
+                // NEW RAZORPAY CHECKOUT FUNCTION (Requires Firebase backend to be running)
+                async processRazorpayCheckout() {
+                    if (this.cart.length === 0) return;
+
+                    try {
+                        // Ensure this URL matches your deployed Firebase Cloud Function URL
+                        const orderResponse = await fetch('YOUR_FIREBASE_CLOUD_FUNCTION_URL_HERE/createOrder', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                cart: this.cart,
+                                amount: this.totalCalculation() * 100 // Amount in paise
+                            })
+                        });
+                        
+                        if (!orderResponse.ok) throw new Error("Failed to create order on server.");
+                        const orderData = await orderResponse.json();
+
+                        const options = {
+                            key: "YOUR_PUBLIC_RAZORPAY_KEY_ID", 
+                            amount: orderData.amount,
+                            currency: "INR",
+                            name: "Parampara Atelier",
+                            description: "Luxury Ethnic Wear Checkout",
+                            image: "Logoicon.png", 
+                            order_id: orderData.id,
+                            handler: async (response) => {
+                                const verifyResponse = await fetch('YOUR_FIREBASE_CLOUD_FUNCTION_URL_HERE/verifyPayment', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                        cartData: this.cart
+                                    })
+                                });
+                                
+                                const verifyResult = await verifyResponse.json();
+                                if(verifyResult.success) {
+                                    alert("Payment successful! Your bespoke order is confirmed.");
+                                    this.cart = []; // Empty cart on success
+                                    this.cartOpen = false;
+                                } else {
+                                    alert("Payment verification failed. Please contact support.");
+                                }
+                            },
+                            prefill: {
+                                name: "", 
+                                email: "",
+                                contact: ""
+                            },
+                            theme: {
+                                color: "#4A0E17" 
+                            }
+                        };
+
+                        const rzp = new Razorpay(options);
+                        rzp.on('payment.failed', function (response){
+                            console.error("Payment Failed", response.error);
+                            alert("Payment failed: " + response.error.description);
+                        });
+                        
+                        rzp.open();
+
+                    } catch (error) {
+                        console.error("Error initiating checkout:", error);
+                        alert("Unable to connect to secure checkout. Ensure your backend is configured.");
+                    }
                 }
             }
         }
