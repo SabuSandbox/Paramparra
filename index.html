@@ -119,7 +119,7 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
-            <template x-for="item in filteredItems()" :key="item.id">
+            <template x-for="item in filteredItems()" :key="item.uniqueId">
                 <div @click="triggerQuickView(item)" 
                      class="group relative flex flex-col justify-between bg-white p-4 rounded-2xl border border-[#EAE4DC]/60 hover:border-[#9E7356]/50 transform hover:-translate-y-1.5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer" 
                      x-data="{ localActiveIndex: 0 }">
@@ -129,7 +129,7 @@
                         
                         <div class="absolute inset-0 p-4 flex flex-col justify-between items-end z-20">
                             <button @click.stop="toggleWishlist(item)" class="bg-white/90 backdrop-blur-xs p-2.5 rounded-full shadow-md text-[#4A2312] hover:bg-[#4A0E17] hover:text-white transform hover:scale-110 transition duration-300">
-                                <i :class="isWishlisted(item.id) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'"></i>
+                                <i :class="isWishlisted(item.uniqueId) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'"></i>
                             </button>
                         </div>
                         
@@ -309,7 +309,7 @@
                         </template>
 
                         <div class="divide-y divide-[#F4EFEA]">
-                            <template x-for="wItem in wishlist" :key="wItem.id">
+                            <template x-for="wItem in wishlist" :key="wItem.uniqueId">
                                 <div class="flex py-4 items-center justify-between group" x-transition:leave="transition ease-in duration-300 transform opacity-0 -translate-x-4">
                                     <div class="flex items-center space-x-4 flex-1 min-w-0">
                                         <div class="flex-shrink-0 w-12 h-16 border border-[#EAE4DC]/60 rounded-md overflow-hidden bg-[#F4EFEA]">
@@ -357,20 +357,23 @@
                 cart: [],
                 wishlist: [],
                 
+                // Master catalog split completely into distinctive standalone localized item instances
                 catalogData: [
                     { 
-                        id: 1, 
-                        title: "Gul-e-Miriam Silk Gathered Anarkali Set", 
+                        id: 1,
+                        uniqueId: "1_pink",
+                        title: "Gul-e-Miriam Silk Gathered Anarkali Set (Pink)", 
                         category: "Festive Wear", 
                         price: 3699, 
                         fabricInfo: "Premium Slub Cotton Silk Weave", 
                         badge: "Premium Festive", 
-                        narrative: "A vibrant crimson pink festive masterpiece featuring detailed floral vine embroidery over the bodice and premium mirror-work finishes. Cut with an elegant high-flare flowing silhouette, it comes complete with comfort trousers and a lightweight sheer dupatta displaying handcrafted botanical accent prints.", 
+                        narrative: "A vibrant crimson fuchsia pink festive masterpiece featuring detailed floral vine embroidery over the bodice and premium mirror-work finishes. Cut with an elegant high-flare flowing silhouette, it comes complete with comfort trousers and a lightweight sheer dupatta displaying handcrafted botanical accent prints.", 
                         images: ["pink.jpeg", "pink2.jpeg"] 
                     },
                     { 
-                        id: 2, 
-                        title: "Scarlet Hearts Contemporary Tunic Suit", 
+                        id: 2,
+                        uniqueId: "2_cream",
+                        title: "Scarlet Hearts Contemporary Tunic Suit (Cream)", 
                         category: "Co-ords", 
                         price: 1899, 
                         fabricInfo: "Premium Organic Khadi Cotton", 
@@ -379,8 +382,9 @@
                         images: ["org - Copy.jpeg", "oh - Copy.jpeg", "oh.jpeg"] 
                     },
                     { 
-                        id: 3, 
-                        title: "Madhubani Rose Soft Silhouette Kurti", 
+                        id: 3,
+                        uniqueId: "3_pink",
+                        title: "Madhubani Rose Soft Silhouette Kurti (Pink)", 
                         category: "Kurtis & Suits", 
                         price: 2499, 
                         fabricInfo: "Soft Organic Slub Cotton Linen", 
@@ -389,8 +393,9 @@
                         images: ["pinkw.jpeg", "white.jpeg"] 
                     },
                     { 
-                        id: 4, 
-                        title: "Indigo Blue Sunflower Motif Anarkali Set", 
+                        id: 4,
+                        uniqueId: "4_blue",
+                        title: "Indigo Blue Sunflower Motif Anarkali Set (Blue)", 
                         category: "Kurtis & Suits", 
                         price: 2999, 
                         fabricInfo: "Handcrafted Cambric Mulmul Silk", 
@@ -399,8 +404,9 @@
                         images: ["bluew.jpeg", "blue w.jpeg"] 
                     },
                     { 
-                        id: 5, 
-                        title: "Ebony Onyx Royal Cutwork Palazzo Suit", 
+                        id: 5,
+                        uniqueId: "5_ivory",
+                        title: "Ebony Onyx Royal Cutwork Palazzo Suit (Ivory)", 
                         category: "Festive Wear", 
                         price: 3499, 
                         fabricInfo: "Fine Resham Mulmul Cotton Linen Blend", 
@@ -409,18 +415,31 @@
                         images: ["bwhite - Copy.jpeg", "bwhite2 - Copy.jpeg", "bwhite3 - Copy.jpeg"] 
                     },
                     { 
-                        id: 6, 
-                        title: "Desert Earth Terracotta Chanderi Set", 
+                        id: 6,
+                        uniqueId: "6_terracotta",
+                        title: "Desert Earth Terracotta Chanderi Set (Terracotta)", 
                         category: "Fusion & Prints", 
                         price: 2799, 
                         fabricInfo: "Pure Chanderi Silk Cotton Blend", 
                         badge: "New Arrival", 
-                        narrative: "Understated classic grace defined by an elegant earthen terracotta canvas. Embellished with immaculate white chikan keyhole-necklace accents, this matching coordinate pair comes wrapped in an ethereal matching ivory print dupatta shawl displaying bold floral parameters.", 
-                        images: ["rust.jpeg", "rusty.jpeg", "blue rust.jpeg"] 
+                        narrative: "Understated classic grace defined by an elegant earthen terracotta canvas. Embellished with immaculate white chikan keyhole-necklace accents, this matching coordinate pair comes wrapped in an ethereal matching print dupatta shawl displaying bold floral parameters.", 
+                        images: ["rust.jpeg", "rusty.jpeg"] 
+                    },
+                    {
+                        id: 6,
+                        uniqueId: "6_azure",
+                        title: "Desert Earth Azure Chanderi Set (Blue)", 
+                        category: "Fusion & Prints", 
+                        price: 2799, 
+                        fabricInfo: "Pure Chanderi Silk Cotton Blend", 
+                        badge: "New Arrival", 
+                        narrative: "Understated classic grace defined by an elegant deep blue layout canvas. Embellished with immaculate white chikan keyhole-necklace accents, this alternative version comes styled with dynamic comfort trousers and an block print dupatta layer setup.", 
+                        images: ["blue rust.jpeg"]
                     },
                     { 
-                        id: 7, 
-                        title: "Vrindavan Peacock Kalamkari Suit Set", 
+                        id: 7,
+                        uniqueId: "7_green",
+                        title: "Vrindavan Peacock Kalamkari Suit Set (Green)", 
                         category: "Fusion & Prints", 
                         price: 3199, 
                         fabricInfo: "Premium Glazed Cambric Cotton", 
@@ -429,8 +448,9 @@
                         images: ["g1.jpeg", "green yellow.jpeg", "gy.jpeg"] 
                     },
                     { 
-                        id: 8, 
-                        title: "Royal Wine Cross-Stitch Luxury Kurti", 
+                        id: 8,
+                        uniqueId: "8_wine",
+                        title: "Royal Wine Cross-Stitch Luxury Kurti (Wine)", 
                         category: "Kurtis & Suits", 
                         price: 3299, 
                         fabricInfo: "Premium Textured Slub Linen Weave", 
@@ -439,8 +459,9 @@
                         images: ["WhatsApp Image 2026-05-11 at 2.04.14 PM6.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM5.jpeg"] 
                     },
                     { 
-                        id: 9, 
-                        title: "Gilded Rose Cross-Stitch Luxe Set", 
+                        id: 9,
+                        uniqueId: "9_white",
+                        title: "Gilded Rose Cross-Stitch Luxe Set (White)", 
                         category: "Kurtis & Suits", 
                         price: 2299, 
                         fabricInfo: "Premium Textured Cotton Slub Weave", 
@@ -449,8 +470,9 @@
                         images: ["WhatsApp Image 2026-05-11 at 9.27.45 PM3.jpeg", "WhatsApp Image 2026-05-11 at 9.27.45 PM2.jpeg", "WhatsApp Image 2026-05-11 at 9.27.45 PM1 - Copy.jpeg"] 
                     },
                     { 
-                        id: 10, 
-                        title: "Marigold Harmony Festive Kurti Set", 
+                        id: 10,
+                        uniqueId: "10_beige",
+                        title: "Marigold Harmony Festive Kurti Set (Beige)", 
                         category: "Festive Wear", 
                         price: 3299, 
                         fabricInfo: "Luxe Mercerized Cotton Silk Blend", 
@@ -459,8 +481,9 @@
                         images: ["WhatsApp Image 2026-05-13 at 5.30.31 PM.jpeg", "WhatsApp Image 2026-05-13 at 5.30.31 PM2.jpeg", "WhatsApp Image 2026-05-13 at 5.30.31 PM1.jpeg"] 
                     },
                     { 
-                        id: 11, 
-                        title: "Persian Teal Luxe Printed Ensemble", 
+                        id: 11,
+                        uniqueId: "11_teal",
+                        title: "Persian Teal Luxe Printed Ensemble (Teal)", 
                         category: "Fusion & Prints", 
                         price: 2899, 
                         fabricInfo: "Fine Glazed Cotton Satin", 
@@ -469,8 +492,9 @@
                         images: ["WhatsApp Image 2026-05-18 at 6.22.04 PM.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM1.jpeg"] 
                     },
                     { 
-                        id: 12, 
-                        title: "Cerulean Bloom Comfort Loungewear Set", 
+                        id: 12,
+                        uniqueId: "12_cream",
+                        title: "Cerulean Bloom Comfort Loungewear Set (Cream)", 
                         category: "Co-ords", 
                         price: 1999, 
                         fabricInfo: "Ultra-Soft Breathable Cotton-Linen", 
@@ -479,8 +503,9 @@
                         images: ["WhatsApp Image 2026-05-11 at 5.20.01 PM - Copy.jpeg", "WhatsApp Image 2026-05-11 at 5.20.01 PM1 - Copy.jpeg"] 
                     },
                     { 
-                        id: 13, 
-                        title: "Gul-e-Anar Flared Volume Anarkali Set", 
+                        id: 13,
+                        uniqueId: "13_pink",
+                        title: "Gul-e-Anar Flared Volume Anarkali Set (Pink)", 
                         category: "Festive Wear", 
                         price: 3599, 
                         fabricInfo: "Premium Breathable Mulmul Weave", 
@@ -489,8 +514,9 @@
                         images: ["WhatsApp Image 2026-05-19 at 10.50.01 PM.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM2.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM3.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM4.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM5.jpeg"] 
                     },
                     { 
-                        id: 14, 
-                        title: "Pastel Geometry Floral A-Line Suit", 
+                        id: 14,
+                        uniqueId: "14_white",
+                        title: "Pastel Geometry Floral A-Line Suit (White)", 
                         category: "Kurtis & Suits", 
                         price: 2399, 
                         fabricInfo: "Soft Breathable Mulmul Linen", 
@@ -499,8 +525,9 @@
                         images: ["WhatsApp Image 2026-05-23 at 10.09.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (6).jpeg"] 
                     },
                     { 
-                        id: 15, 
-                        title: "Fuchsia Meadow Fine Embroidery Set", 
+                        id: 15,
+                        uniqueId: "15_fuchsia",
+                        title: "Fuchsia Meadow Fine Embroidery Set (Fuchsia)", 
                         category: "Kurtis & Suits", 
                         price: 2499, 
                         fabricInfo: "Premium Fine Cambric Mulmul", 
@@ -509,8 +536,9 @@
                         images: ["WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"] 
                     },
                     { 
-                        id: 16, 
-                        title: "Gulistan Vibrant Multi-Embroidery Tunic Shirt", 
+                        id: 16,
+                        uniqueId: "16_white",
+                        title: "Gulistan Vibrant Multi-Embroidery Tunic Shirt (White)", 
                         category: "Co-ords", 
                         price: 2699, 
                         fabricInfo: "Premium Structured Khadi Cotton", 
@@ -519,28 +547,75 @@
                         images: ["WhatsApp Image 2026-05-24 at 11.42.50 PM (1).jpeg", "WhatsApp Image 2026-05-24 at 11.42.50 PM.jpeg"] 
                     },
                     { 
-                        id: 17, 
-                        title: "Bagh-e-Kashni Scalloped Rose Co-ord Suit", 
+                        id: 17,
+                        uniqueId: "17_lavender",
+                        title: "Bagh-e-Kashni Scalloped Rose Suit (Lavender)", 
                         category: "Co-ords", 
                         price: 2799, 
                         fabricInfo: "Luxe Slub Cotton Silk Weave", 
                         badge: "Luxury Loungewear", 
-                        narrative: "The pinnacle of high-comfort editorial fashion. Built with precise vertical pin-tucks tracing down the button placket frame. Available in multiple tonal editions including midnight black, rose lavender, and earth rust orange, showcasing intricate laser cutwork scalloped borders layered with vivid blooming rose arrays.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM.jpeg", "WhatsApp Image 2026-05-24 at 11.42.52 PM2.jpeg", "WhatsApp Image 2026-05-24 at 11.42.52 PM3.jpeg", "WhatsApp Image 2026-05-24 at 11.42.51 PM (3).jpeg"] 
+                        narrative: "The pinnacle of high-comfort editorial fashion. Features precise vertical pin-tucks tracing down the button placket frame. This variant highlights a soft rose-lavender foundation canvas layered with vivid blooming rose cutting clusters.", 
+                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM2.jpeg"] 
                     },
                     { 
-                        id: 18, 
-                        title: "Minimalist Cherry-Moti Comfort Co-ord Set", 
+                        id: 17,
+                        uniqueId: "17_rust",
+                        title: "Bagh-e-Kashni Scalloped Rose Suit (Rust)", 
+                        category: "Co-ords", 
+                        price: 2799, 
+                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
+                        badge: "Luxury Loungewear", 
+                        narrative: "The pinnacle of high-comfort editorial fashion. Outfitted with detailed sleeve panel details. This variant brings forward deep earth rust-orange coloration paths bound tightly with pink botanical overlays.", 
+                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM3.jpeg"] 
+                    },
+                    { 
+                        id: 17,
+                        uniqueId: "17_black",
+                        title: "Bagh-e-Kashni Scalloped Rose Suit (Black)", 
+                        category: "Co-ords", 
+                        price: 2799, 
+                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
+                        badge: "Luxury Loungewear", 
+                        narrative: "The pinnacle of high-comfort editorial fashion. Impeccable contrast layouts highlighted down side paths. This edition matches deep dark solid charcoal backdrops with structured magenta flora elements.", 
+                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM.jpeg"] 
+                    },
+                    { 
+                        id: 17,
+                        uniqueId: "17_green",
+                        title: "Bagh-e-Kashni Scalloped Rose Suit (Emerald Green)", 
+                        category: "Co-ords", 
+                        price: 2799, 
+                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
+                        badge: "Luxury Loungewear", 
+                        narrative: "The pinnacle of high-comfort editorial fashion. Designed with loose fluid trousers. This edition presents high-grade forest emerald canvas surfaces contrasted gracefully against detailed pastel pink patterns.", 
+                        images: ["WhatsApp Image 2026-05-24 at 11.42.51 PM (3).jpeg"] 
+                    },
+                    { 
+                        id: 18,
+                        uniqueId: "18_red",
+                        title: "Minimalist Cherry-Moti Comfort Set (Ruby Red)", 
                         category: "Co-ords", 
                         price: 2399, 
                         fabricInfo: "Fine Organic Combed Mulmul Linen", 
                         badge: "Trending Print", 
-                        narrative: "Breezy comfort tailored seamlessly into clean solid tones with whimsical details. Features a loose tunic frame matched with straight off-white block parameters displaying delicate scattering cherry-moti prints along the bottom trousers. Available in deep ruby red and clear sapphire indigo finishes.", 
-                        images: ["WhatsApp Image 2026-05-26 at 4.09.56 PM.jpeg", "WhatsApp Image 2026-05-26 at 4.09.57 PM1.jpeg", "WhatsApp Image 2026-05-26 at 4.09.57 PM2.jpeg"] 
+                        narrative: "Breezy comfort tailored seamlessly into clean solid tones with whimsical details. Features a loose tunic frame matched with straight off-white block parameters displaying delicate scattering ruby red cherry-moti prints along the bottom trousers.", 
+                        images: ["WhatsApp Image 2026-05-26 at 4.09.56 PM.jpeg"] 
                     },
                     { 
-                        id: 19, 
-                        title: "Bespoke Blossom Motif Fusion Silhouette", 
+                        id: 18,
+                        uniqueId: "18_indigo",
+                        title: "Minimalist Cherry-Moti Comfort Set (Indigo Blue)", 
+                        category: "Co-ords", 
+                        price: 2399, 
+                        fabricInfo: "Fine Organic Combed Mulmul Linen", 
+                        badge: "Trending Print", 
+                        narrative: "Breezy comfort tailored seamlessly into clean solid tones with whimsical details. Features a loose tunic frame matched with straight off-white block parameters displaying delicate scattering dark sapphire blue cherry-moti prints along the bottom trousers.", 
+                        images: ["WhatsApp Image 2026-05-26 at 4.09.57 PM1.jpeg", "WhatsApp Image 2026-05-26 at 4.09.57 PM2.jpeg"] 
+                    },
+                    { 
+                        id: 19,
+                        uniqueId: "19_white",
+                        title: "Bespoke Blossom Motif Fusion Silhouette (White)", 
                         category: "Fusion & Prints", 
                         price: 2899, 
                         fabricInfo: "Glazed Premium Slub Satin Cotton", 
@@ -549,8 +624,9 @@
                         images: ["WhatsApp Image 2026-05-26 at 4.09.50 PM.jpeg"] 
                     },
                     { 
-                        id: 20, 
-                        title: "Vasanta Marigold Gathered Festive Set", 
+                        id: 20,
+                        uniqueId: "20_yellow",
+                        title: "Vasanta Marigold Gathered Festive Set (Yellow)", 
                         category: "Festive Wear", 
                         price: 3199, 
                         fabricInfo: "Luxe Combed Cotton Satin Blend", 
@@ -559,8 +635,9 @@
                         images: ["yellow.jpeg", "yellow2.jpeg"] 
                     },
                     { 
-                        id: 21, 
-                        title: "Lilac Dream Linear Stitch Flat-Lay Pair", 
+                        id: 21,
+                        uniqueId: "21_lavender",
+                        title: "Lilac Dream Linear Stitch Flat-Lay Pair (Lavender)", 
                         category: "Kurtis & Suits", 
                         price: 2199, 
                         fabricInfo: "Lightweight Breathable Khadi-Linen", 
@@ -571,6 +648,9 @@
                 ],
 
                 init() {
+                    // Fisher-Yates algorithmic engine variant to completely shuffle objects dynamically on execution loop
+                    this.shuffleCatalog();
+                    
                     this.$nextTick(() => { this.updatePillPosition(0); });
 
                     window.addEventListener('beforeinstallprompt', (e) => {
@@ -578,7 +658,6 @@
                         this.deferredPrompt = e;
                     });
 
-                    // Automated Pop-Up Engine Logic
                     setTimeout(() => {
                         const isDismissed = localStorage.getItem('parampara_pwa_dismissed');
                         if (!isDismissed) {
@@ -591,6 +670,12 @@
                         this.deferredPrompt = null;
                         localStorage.setItem('parampara_pwa_dismissed', 'true');
                     });
+                },
+                shuffleCatalog() {
+                    for (let i = this.catalogData.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [this.catalogData[i], this.catalogData[j]] = [this.catalogData[j], this.catalogData[i]];
+                    }
                 },
                 handleInstallClick() {
                     if (this.deferredPrompt) {
@@ -646,18 +731,18 @@
                     this.quickViewActive = true;
                 },
                 insertIntoCart(unit, size) {
-                    this.cart.push({ id: unit.id, title: unit.title, price: unit.price, image: unit.images[0], size: size });
+                    this.cart.push({ id: unit.uniqueId, title: unit.title, price: unit.price, image: unit.images[0], size: size });
                     this.quickViewActive = false;
                     this.cartOpen = true;
                 },
                 removeLineItem(idx) { this.cart.splice(idx, 1); },
                 totalCalculation() { return this.cart.reduce((acc, item) => acc + item.price, 0); },
                 toggleWishlist(unit) {
-                    const idx = this.wishlist.findIndex(w => w.id === unit.id);
+                    const idx = this.wishlist.findIndex(w => w.uniqueId === unit.uniqueId);
                     if (idx > -1) this.wishlist.splice(idx, 1);
                     else this.wishlist.push(unit);
                 },
-                isWishlisted(id) { return this.wishlist.some(w => w.id === id); },
+                isWishlisted(uniqueId) { return this.wishlist.some(w => w.uniqueId === uniqueId); },
                 sendWhatsAppOrder(unit, size) {
                     window.open(`https://wa.me/919810198271?text=Order%20${encodeURIComponent(unit.title)}`, '_blank');
                 },
