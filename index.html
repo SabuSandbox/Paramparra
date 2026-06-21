@@ -28,17 +28,9 @@
             opacity: 1;
         }
 
-        /* Custom sleek scrollbar for sliding panels */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #F4EFEA;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #9E7356;
-            border-radius: 10px;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #F4EFEA; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #9E7356; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-6 lg:p-8 min-h-screen flex flex-col justify-between" x-data="paramparaApp()">
@@ -67,10 +59,13 @@
     <div class="relative w-full rounded-[2.5rem] border border-[#6B1824] overflow-hidden bg-[#4A0E17] shadow-xl min-h-[16vh] flex items-center p-4 md:p-6">
         <div class="relative z-10 grid grid-cols-2 md:grid-cols-3 items-center w-full max-w-7xl mx-auto px-2">
             
-            <div class="hidden md:flex items-center justify-start">
+            <div class="hidden md:flex items-center space-x-4 justify-start">
                 <a href="#" class="block hover:opacity-90 transition">
                     <img src="Logosymbbg.png" alt="Parampara Symbol" class="h-24 sm:h-28 w-auto object-contain">
                 </a>
+                <button @click="sellerDashboardOpen = true" class="text-[10px] uppercase tracking-widest border border-white/30 text-white/80 px-3 py-1.5 rounded-full hover:bg-white hover:text-[#4A0E17] transition-all duration-300">
+                    <i class="fa-solid fa-user-gear mr-1"></i> Portal
+                </button>
             </div>
 
             <div class="flex justify-start md:justify-center">
@@ -119,7 +114,7 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
-            <template x-for="item in filteredItems()" :key="item.uniqueId">
+            <template x-for="item in filteredItems()" :key="item.id">
                 <div @click="triggerQuickView(item)" 
                      class="group relative flex flex-col justify-between bg-white p-4 rounded-2xl border border-[#EAE4DC]/60 hover:border-[#9E7356]/50 transform hover:-translate-y-1.5 shadow-xs hover:shadow-2xl transition-all duration-500 cursor-pointer" 
                      x-data="{ localActiveIndex: 0 }">
@@ -129,7 +124,7 @@
                         
                         <div class="absolute inset-0 p-4 flex flex-col justify-between items-end z-20">
                             <button @click.stop="toggleWishlist(item)" class="bg-white/90 backdrop-blur-xs p-2.5 rounded-full shadow-md text-[#4A2312] hover:bg-[#4A0E17] hover:text-white transform hover:scale-110 transition duration-300">
-                                <i :class="isWishlisted(item.uniqueId) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'"></i>
+                                <i :class="isWishlisted(item.id) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'"></i>
                             </button>
                         </div>
                         
@@ -154,7 +149,10 @@
                             <h3 class="text-xs font-semibold text-[#2D2A26] tracking-wide leading-tight group-hover:text-[#9E7356] transition-colors duration-300" x-text="item.title"></h3>
                             <p class="text-[11px] text-[#8C847C] mt-1.5 italic font-medium" x-text="item.fabricInfo"></p>
                         </div>
-                        <p class="text-sm font-bold text-[#4A2312]" x-text="'₹' + item.price.toLocaleString('en-IN')"></p>
+                        <div>
+                            <p class="text-sm font-bold text-[#4A2312] text-right" x-text="'₹' + item.price.toLocaleString('en-IN')"></p>
+                            <p class="text-[9px] text-[#8C847C] tracking-tight mt-0.5 text-right font-medium" x-text="getTotalStockText(item)"></p>
+                        </div>
                     </div>
                 </div>
             </template>
@@ -196,48 +194,61 @@
                     <p class="text-xl font-bold text-[#4A0E17] mb-4" x-text="'₹' + focusedUnit?.price.toLocaleString('en-IN')"></p>
                     <hr class="border-[#EAE4DC] my-4">
                     <p class="text-xs text-[#5C544C] mb-6 font-normal leading-relaxed tracking-wide" x-text="focusedUnit?.narrative"></p>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-[10px] uppercase font-bold tracking-widest text-[#2D2A26] mb-3">Select Size</h4>
+                        <div class="flex items-center space-x-3">
+                            <template x-for="sz in ['S', 'M', 'L', 'XL']" :key="sz">
+                                <button @click="chosenSize = sz"
+                                        :disabled="focusedUnit && focusedUnit.inventory[sz] === 0"
+                                        :class="[
+                                            chosenSize === sz ? 'bg-[#4A0E17] text-white border-transparent shadow-md font-bold scale-105' : 'bg-transparent border-[#EAE4DC] text-[#2D2A26] hover:border-[#9E7356] font-medium',
+                                            focusedUnit && focusedUnit.inventory[sz] === 0 ? 'opacity-30 cursor-not-allowed bg-stone-100 line-through text-stone-400' : ''
+                                        ]"
+                                        class="w-11 h-11 text-xs border rounded-xl flex flex-col items-center justify-center transition-all duration-300 focus:outline-none">
+                                    <span x-text="sz"></span>
+                                    <span class="text-[8px] opacity-70 font-light mt-0.5" x-text="focusedUnit ? focusedUnit.inventory[sz] : 0"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
                 </div>
-                <button @click="insertIntoCart(focusedUnit, chosenSize)" class="w-full bg-[#4A0E17] text-white text-[10px] uppercase tracking-widest font-bold py-4 rounded-xl shadow hover:bg-[#6B1824] transition duration-300 transform active:scale-98">Add to Shopping Bag</button>
+                <button @click="insertIntoCart(focusedUnit, chosenSize)" 
+                        :disabled="focusedUnit && focusedUnit.inventory[chosenSize] === 0"
+                        :class="focusedUnit && focusedUnit.inventory[chosenSize] === 0 ? 'bg-stone-300 cursor-not-allowed text-stone-500' : 'bg-[#4A0E17] hover:bg-[#6B1824] text-white'"
+                        class="w-full text-[10px] uppercase tracking-widest font-bold py-4 rounded-xl shadow transition duration-300 transform active:scale-98"
+                        x-text="focusedUnit && focusedUnit.inventory[chosenSize] === 0 ? 'Out of Stock in this Size' : 'Add to Shopping Bag'">
+                </button>
             </div>
         </div>
     </div>
 
     <div x-show="cartOpen" class="fixed inset-0 z-50 overflow-hidden" x-cloak>
-        <div class="absolute inset-0 bg-[#2D2A26]/40 backdrop-blur-xs transition-opacity" 
-             @click="cartOpen = false"
+        <div class="absolute inset-0 bg-[#2D2A26]/40 backdrop-blur-xs transition-opacity" @click="cartOpen = false"
              x-transition:enter="ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="ease-in duration-400" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
-
         <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
             <div class="w-screen max-w-md bg-[#FCFBF9] border-l border-[#EAE4DC] flex flex-col justify-between shadow-2xl"
                  x-transition:enter="transform transition ease-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                  x-transition:leave="transform transition ease-in duration-400 sm:duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
-                
                 <div class="p-6 flex-1 flex flex-col min-h-0">
                     <div class="flex items-center justify-between border-b border-[#EAE4DC] pb-4">
                         <div class="flex items-baseline space-x-2">
                             <h3 class="serif-title text-2xl text-[#4A2312]">Shopping Bag</h3>
                             <span class="text-xs text-[#8C847C]" x-text="'(' + cart.length + (cart.length === 1 ? ' item' : ' items') + ')'"></span>
                         </div>
-                        <button @click="cartOpen = false" class="text-stone-400 hover:text-[#4A0E17] p-2 rounded-full hover:bg-stone-100 transition duration-300">
-                            <i class="fa-solid fa-xmark text-lg"></i>
-                        </button>
+                        <button @click="cartOpen = false" class="text-stone-400 hover:text-[#4A0E17] p-2 rounded-full hover:bg-stone-100 transition duration-300"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
-
                     <div class="mt-6 flex-1 overflow-y-auto custom-scrollbar pr-1">
                         <template x-if="cart.length === 0">
                             <div class="flex flex-col items-center justify-center h-64 text-center">
-                                <div class="w-16 h-16 bg-[#F4EFEA] text-[#9E7356] rounded-full flex items-center justify-center mb-4">
-                                    <i class="fa-solid fa-bag-shopping text-2xl"></i>
-                                </div>
+                                <div class="w-16 h-16 bg-[#F4EFEA] text-[#9E7356] rounded-full flex items-center justify-center mb-4"><i class="fa-solid fa-bag-shopping text-2xl"></i></div>
                                 <p class="serif-title text-lg text-[#4A2312]">Your shopping bag is empty</p>
-                                <p class="text-xs text-[#8C847C] mt-1 max-w-[240px]">Explore the portfolio loop to build your bespoke heritage collection.</p>
                             </div>
                         </template>
-
                         <div class="divide-y divide-[#F4EFEA]">
                             <template x-for="(bagItem, index) in cart" :key="index">
-                                <div class="flex py-4 group" x-transition:leave="transition ease-in duration-300 transform opacity-0 -translate-x-4">
+                                <div class="flex py-4 group">
                                     <div class="flex-shrink-0 w-16 h-20 border border-[#EAE4DC]/60 rounded-lg overflow-hidden bg-[#F4EFEA]">
                                         <img :src="bagItem.image" class="w-full h-full object-cover object-top">
                                     </div>
@@ -247,11 +258,11 @@
                                                 <h4 x-text="bagItem.title" class="line-clamp-1"></h4>
                                                 <p class="ml-4 text-[#4A2312] font-bold" x-text="'₹' + bagItem.price.toLocaleString('en-IN')"></p>
                                             </div>
-                                            <p class="mt-1 text-[10px] text-[#8C847C] font-medium uppercase tracking-wider" x-text="'Size: ' + bagItem.size"></p>
+                                            <p class="mt-1 text-[10px] text-[#8C847C] font-bold uppercase tracking-wider bg-[#F4EFEA] inline-block px-2 py-0.5 rounded" x-text="'Size: ' + bagItem.size"></p>
                                         </div>
                                         <div class="flex items-center justify-between text-[11px]">
                                             <span class="text-stone-400 text-[10px]">Ready to ship</span>
-                                            <button @click="removeLineItem(index)" class="text-red-600 font-bold hover:text-red-800 underline underline-offset-4 transition duration-200">Remove</button>
+                                            <button @click="removeLineItem(index)" class="text-red-600 font-bold hover:text-red-800 underline transition duration-200">Remove</button>
                                         </div>
                                     </div>
                                 </div>
@@ -259,58 +270,37 @@
                         </div>
                     </div>
                 </div>
-
-                <div x-show="cart.length > 0" class="border-t border-[#EAE4DC] bg-white p-6 shadow-[0_-8px_30px_rgb(0,0,0,0.02)]">
+                <div x-show="cart.length > 0" class="border-t border-[#EAE4DC] bg-white p-6">
                     <div class="flex justify-between text-base font-semibold text-[#2D2A26] mb-4">
                         <span class="serif-title font-normal text-[#4A2312] text-lg">Subtotal</span>
                         <span class="font-bold text-[#4A0E17]" x-text="'₹' + totalCalculation().toLocaleString('en-IN')"></span>
                     </div>
-                    <p class="text-[11px] text-[#8C847C] mb-6 leading-normal normal-case italic font-medium">Taxes and premium shipping logistics curated dynamically at fulfillment.</p>
-                    <button @click="checkoutBulkWhatsApp()" class="w-full bg-[#4A0E17] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest shadow hover:bg-[#6B1824] transition duration-300 transform active:scale-98 flex items-center justify-center space-x-2">
-                        <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Send Order to WhatsApp</span>
-                    </button>
+                    <button @click="checkoutBulkWhatsApp()" class="w-full bg-[#4A0E17] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center space-x-2 shadow hover:bg-[#6B1824] transition"><i class="fa-brands fa-whatsapp text-lg"></i> <span>Send Order to WhatsApp</span></button>
                 </div>
             </div>
         </div>
     </div>
 
     <div x-show="wishlistOpen" class="fixed inset-0 z-50 overflow-hidden" x-cloak>
-        <div class="absolute inset-0 bg-[#2D2A26]/40 backdrop-blur-xs transition-opacity" 
-             @click="wishlistOpen = false"
+        <div class="absolute inset-0 bg-[#2D2A26]/40 backdrop-blur-xs transition-opacity" @click="wishlistOpen = false"
              x-transition:enter="ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="ease-in duration-400" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
-
         <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
             <div class="w-screen max-w-md bg-[#FCFBF9] border-l border-[#EAE4DC] flex flex-col justify-between shadow-2xl"
                  x-transition:enter="transform transition ease-out duration-500 sm:duration-700" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
                  x-transition:leave="transform transition ease-in duration-400 sm:duration-500" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
-                
                 <div class="p-6 flex-1 flex flex-col min-h-0">
                     <div class="flex items-center justify-between border-b border-[#EAE4DC] pb-4">
                         <div class="flex items-baseline space-x-2">
                             <h3 class="serif-title text-2xl text-[#4A2312]">Your Wishlist</h3>
                             <span class="text-xs text-[#8C847C]" x-text="'(' + wishlist.length + (wishlist.length === 1 ? ' item' : ' items') + ')'"></span>
                         </div>
-                        <button @click="wishlistOpen = false" class="text-stone-400 hover:text-[#4A0E17] p-2 rounded-full hover:bg-stone-100 transition duration-300">
-                            <i class="fa-solid fa-xmark text-lg"></i>
-                        </button>
+                        <button @click="wishlistOpen = false" class="text-stone-400 hover:text-[#4A0E17] p-2 rounded-full hover:bg-stone-100 transition duration-300"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
-
                     <div class="mt-6 flex-1 overflow-y-auto custom-scrollbar pr-1">
-                        <template x-if="wishlist.length === 0">
-                            <div class="flex flex-col items-center justify-center h-64 text-center">
-                                <div class="w-16 h-16 bg-[#F4EFEA] text-[#9E7356] rounded-full flex items-center justify-center mb-4">
-                                    <i class="fa-regular fa-heart text-2xl"></i>
-                                </div>
-                                <p class="serif-title text-lg text-[#4A2312]">Your wishlist is pristine</p>
-                                <p class="text-xs text-[#8C847C] mt-1 max-w-[240px]">Save your favorite artisanal pieces here while designing your ensemble lookbook.</p>
-                            </div>
-                        </template>
-
                         <div class="divide-y divide-[#F4EFEA]">
-                            <template x-for="wItem in wishlist" :key="wItem.uniqueId">
-                                <div class="flex py-4 items-center justify-between group" x-transition:leave="transition ease-in duration-300 transform opacity-0 -translate-x-4">
+                            <template x-for="wItem in wishlist" :key="wItem.id">
+                                <div class="flex py-4 items-center justify-between group">
                                     <div class="flex items-center space-x-4 flex-1 min-w-0">
                                         <div class="flex-shrink-0 w-12 h-16 border border-[#EAE4DC]/60 rounded-md overflow-hidden bg-[#F4EFEA]">
                                             <img :src="wItem.images[0]" class="w-full h-full object-cover object-top">
@@ -322,9 +312,7 @@
                                     </div>
                                     <div class="flex items-center space-x-3 ml-4">
                                         <button @click="wishlistOpen = false; triggerQuickView(wItem)" class="text-[10px] uppercase font-bold tracking-wider bg-[#4A0E17] text-white px-3 py-2 rounded-md hover:bg-[#6B1824] transition">View</button>
-                                        <button @click="toggleWishlist(wItem)" class="text-stone-400 hover:text-red-600 p-2 rounded-full hover:bg-stone-100 transition duration-200">
-                                            <i class="fa-regular fa-trash-can text-sm"></i>
-                                        </button>
+                                        <button @click="toggleWishlist(wItem)" class="text-stone-400 hover:text-red-600 p-2 rounded-full hover:bg-stone-100 transition duration-200"><i class="fa-regular fa-trash-can text-sm"></i></button>
                                     </div>
                                 </div>
                             </template>
@@ -335,13 +323,104 @@
         </div>
     </div>
 
+    <div x-show="sellerDashboardOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" x-cloak>
+        <div class="fixed inset-0 bg-[#2D2A26]/60 backdrop-blur-md" @click="sellerDashboardOpen = false"></div>
+        <div class="bg-white border border-[#EAE4DC] max-w-4xl w-full rounded-3xl relative z-10 shadow-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            
+            <div class="flex justify-between items-center border-b border-[#EAE4DC] pb-4 mb-6">
+                <h3 class="serif-title text-2xl text-[#4A2312] flex items-center"><i class="fa-solid fa-store mr-3 text-[#9E7356]"></i> Atelier Inventory Desk</h3>
+                <button @click="sellerDashboardOpen = false" class="text-stone-400 hover:text-stone-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <template x-if="!isSellerAuthenticated">
+                <div class="max-w-md mx-auto py-12 text-center">
+                    <p class="text-xs text-[#8C847C] uppercase tracking-widest mb-4">Secure Credentials Required</p>
+                    <input type="password" placeholder="Enter Secure Master Token PIN" x-model="sellerPasswordInput" @keyup.enter="authenticateSeller()" class="w-full text-center p-4 border border-[#EAE4DC] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#4A0E17] mb-4 tracking-widest">
+                    <button @click="authenticateSeller()" class="w-full bg-[#4A0E17] text-white py-3.5 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#6B1824] transition">Verify Authentication Gate</button>
+                </div>
+            </template>
+
+            <template x-if="isSellerAuthenticated">
+                <div class="space-y-12">
+                    
+                    <div class="bg-[#FAF8F5] p-5 rounded-2xl border border-[#EAE4DC]">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-[#4A2312] mb-4 flex items-center"><i class="fa-solid fa-plus-circle mr-2"></i> Append New Lookbook Listing</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <input type="text" placeholder="Product Title" x-model="newProduct.title" class="p-3 border rounded-lg bg-white">
+                            <select x-model="newProduct.category" class="p-3 border rounded-lg bg-white">
+                                <option value="Kurtis & Suits">Kurtis & Suits</option>
+                                <option value="Festive Wear">Festive Wear</option>
+                                <option value="Co-ords">Co-ords</option>
+                                <option value="Fusion & Prints">Fusion & Prints</option>
+                            </select>
+                            <input type="number" placeholder="Price (₹)" x-model.number="newProduct.price" class="p-3 border rounded-lg bg-white">
+                            <input type="text" placeholder="Fabric Info" x-model="newProduct.fabricInfo" class="p-3 border rounded-lg bg-white">
+                            <input type="text" placeholder="Image File (e.g. pink.jpeg)" x-model="newProduct.imagePlaceholder" class="p-3 border rounded-lg bg-white md:col-span-2">
+                            <textarea placeholder="Narrative Lookbook Description Story..." x-model="newProduct.narrative" class="p-3 border rounded-lg bg-white md:col-span-3 h-20"></textarea>
+                        </div>
+                        <div class="mt-4 grid grid-cols-4 gap-2 text-center">
+                            <template x-for="sz in ['S', 'M', 'L', 'XL']">
+                                <div class="p-2 bg-white rounded-lg border">
+                                    <label class="block text-[10px] font-bold" x-text="'Stock ' + sz"></label>
+                                    <input type="number" x-model.number="newProduct.inventory[sz]" class="w-full text-center mt-1 p-1 bg-stone-50 border rounded text-xs">
+                                </div>
+                            </template>
+                        </div>
+                        <button @click="addNewProduct()" class="w-full bg-[#9E7356] text-white py-3 mt-4 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#866145] transition">Commit Item to Live Catalogue</button>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-[#4A2312] mb-4 flex items-center"><i class="fa-solid fa-list-check mr-2"></i> Update Pricing & Real-Time Size Variations</h4>
+                        <div class="overflow-x-auto border rounded-xl">
+                            <table class="w-full text-xs text-left bg-white">
+                                <thead class="bg-stone-100 text-[#4A2312] uppercase text-[10px] tracking-wider">
+                                    <tr>
+                                        <th class="p-3">Design Reference</th>
+                                        <th class="p-3">Rate (₹)</th>
+                                        <th class="p-3 text-center">S</th>
+                                        <th class="p-3 text-center">M</th>
+                                        <th class="p-3 text-center">L</th>
+                                        <th class="p-3 text-center">XL</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-stone-100">
+                                    <template x-for="item in catalogData" :key="item.id">
+                                        <tr class="hover:bg-stone-50/50">
+                                            <td class="p-3 font-medium text-[#2D2A26]" x-text="item.title"></td>
+                                            <td class="p-3">
+                                                <input type="number" x-model.number="item.price" @change="saveCatalogDataToStorage()" class="w-20 p-1.5 border rounded bg-stone-50 text-center font-bold">
+                                            </td>
+                                            <template x-for="sz in ['S', 'M', 'L', 'XL']">
+                                                <td class="p-3 text-center">
+                                                    <input type="number" x-model.number="item.inventory[sz]" @change="saveCatalogDataToStorage()" class="w-12 p-1.5 border rounded text-center bg-stone-50">
+                                                </td>
+                                            </template>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <footer class="mt-24 py-10 border-t border-[#EAE4DC] text-center text-[10px] text-[#8C847C] uppercase tracking-[0.25em]">
+        <p class="serif-title text-[#4A2312] text-xl font-normal tracking-wide normal-case mb-2">Parampara</p>
+        <p class="font-light normal-case tracking-normal">&copy; 2026 Parampara Luxury Ethnic Collections. All rights reserved.</p>
+    </footer>
+
     <script>
         function paramparaApp() {
             return {
-                mobileMenu: false,
                 cartOpen: false,
                 wishlistOpen: false,
                 quickViewActive: false,
+                sellerDashboardOpen: false,
+                isSellerAuthenticated: false,
+                sellerPasswordInput: '',
                 selectedCategory: 'All',
                 activeIndex: 0,
                 chosenSize: 'M',
@@ -354,304 +433,119 @@
                 deferredPrompt: null,
                 
                 groupCategories: ['All', 'Kurtis & Suits', 'Festive Wear', 'Co-ords', 'Fusion & Prints'],
+                
+                // Reactive Core Storage States
                 cart: [],
                 wishlist: [],
-                
-                // Master catalog split completely into distinctive standalone localized item instances
-                catalogData: [
+                catalogData: [],
+
+                // Seller form state definition placeholder
+                newProduct: {
+                    title: '',
+                    category: 'Kurtis & Suits',
+                    price: 2500,
+                    fabricInfo: 'Premium Handloom Fabric',
+                    badge: 'New Collection',
+                    narrative: '',
+                    imagePlaceholder: '',
+                    inventory: { S: 5, M: 10, L: 10, XL: 5 }
+                },
+
+                // Default collection state fallbacks
+                defaultCatalogData: [
                     { 
-                        id: 1,
-                        uniqueId: "1_pink",
-                        title: "Gul-e-Miriam Silk Gathered Anarkali Set (Pink)", 
+                        id: 1, 
+                        title: "Gul-e-Miriam & Fuchsia Meadow Luxury Silhouette Set", 
                         category: "Festive Wear", 
                         price: 3699, 
-                        fabricInfo: "Premium Slub Cotton Silk Weave", 
+                        fabricInfo: "Premium Handloom Cotton Silk Weave", 
                         badge: "Premium Festive", 
-                        narrative: "A vibrant crimson fuchsia pink festive masterpiece featuring detailed floral vine embroidery over the bodice and premium mirror-work finishes. Cut with an elegant high-flare flowing silhouette, it comes complete with comfort trousers and a lightweight sheer dupatta displaying handcrafted botanical accent prints.", 
-                        images: ["pink.jpeg", "pink2.jpeg"] 
+                        narrative: "A breathtaking presentation of pink artisan opulence. Showcases intricate floral branch threadwork cross-stitched natively over the central layout panels, layered neatly with dense white botanical chain-stitching down the scalloped lace neck profile.", 
+                        images: ["pink.jpeg", "pink2.jpeg", "WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"],
+                        inventory: { S: 4, M: 8, L: 12, XL: 3 }
                     },
                     { 
-                        id: 2,
-                        uniqueId: "2_cream",
-                        title: "Scarlet Hearts Contemporary Tunic Suit (Cream)", 
+                        id: 2, 
+                        title: "Scarlet Hearts Contemporary Tunic Suit", 
                         category: "Co-ords", 
                         price: 1899, 
                         fabricInfo: "Premium Organic Khadi Cotton", 
                         badge: "Summer Essential", 
-                        narrative: "A playful yet thoroughly minimalist contemporary silhouette curated from breathable cotton slub canvas. Embellished with scattered, vibrant hand-embroidered scarlet hearts, an elegant split band-collar neckline, and paired with structured wide off-white coordinates.", 
-                        images: ["org - Copy.jpeg", "oh - Copy.jpeg", "oh.jpeg"] 
+                        narrative: "A playful yet thoroughly minimalist contemporary silhouette curated from breathable cotton slub canvas. Embellished with scattered, vibrant hand-embroidered scarlet hearts.", 
+                        images: ["org - Copy.jpeg", "oh.jpeg", "oh - Copy.jpeg"],
+                        inventory: { S: 6, M: 10, L: 5, XL: 0 }
                     },
                     { 
-                        id: 3,
-                        uniqueId: "3_pink",
-                        title: "Madhubani Rose Soft Silhouette Kurti (Pink)", 
+                        id: 3, 
+                        title: "Madhubani Rose Soft Silhouette Kurti", 
                         category: "Kurtis & Suits", 
                         price: 2499, 
                         fabricInfo: "Soft Organic Slub Cotton Linen", 
                         badge: "Minimalist Luxe", 
-                        narrative: "Celebrate pure grace with this soft orchid-pink longline straight kurti. Embellished with subtle geometric lace inserts down the bodice placket and cuffs, accented by micro-panel floral elements and paired cleanly with solid ivory straight comfort trousers.", 
-                        images: ["pinkw.jpeg", "white.jpeg"] 
+                        narrative: "Celebrate pure grace with this soft orchid-pink longline straight kurti. Embellished with subtle geometric lace inserts down the bodice placket.", 
+                        images: ["pinkw.jpeg"],
+                        inventory: { S: 10, M: 14, L: 8, XL: 4 }
                     },
                     { 
-                        id: 4,
-                        uniqueId: "4_blue",
-                        title: "Indigo Blue Sunflower Motif Anarkali Set (Blue)", 
+                        id: 4, 
+                        title: "Indigo Blue Sunflower Motif Anarkali Set", 
                         category: "Kurtis & Suits", 
                         price: 2999, 
                         fabricInfo: "Handcrafted Cambric Mulmul Silk", 
                         badge: "Bestseller", 
-                        narrative: "An absolute vision of luxury heritage. This lightweight matching outfit features striking block-printed midnight blue sunflowers blooming along clean parameters, complemented perfectly with an ethereal matching sheer organza dupatta shawl drape and intricate hand-finished details.", 
-                        images: ["bluew.jpeg", "blue w.jpeg"] 
+                        narrative: "An absolute vision of luxury heritage. This lightweight matching outfit features striking block-printed midnight blue sunflowers blooming along clean parameters.", 
+                        images: ["bluew.jpeg", "blue w.jpeg"],
+                        inventory: { S: 2, M: 5, L: 7, XL: 1 }
                     },
                     { 
-                        id: 5,
-                        uniqueId: "5_ivory",
-                        title: "Ebony Onyx Royal Cutwork Palazzo Suit (Ivory)", 
+                        id: 5, 
+                        title: "Ebony Onyx Royal Cutwork Palazzo Suit", 
                         category: "Festive Wear", 
                         price: 3499, 
                         fabricInfo: "Fine Resham Mulmul Cotton Linen Blend", 
                         badge: "Prestige Edition", 
-                        narrative: "A masterpiece of traditional design balancing rich dark contrast patterns over clean premium ivory canvas. Showcases complex multi-tiered floral Kashmiri cutwork embroidery arrays along the neckline perimeter and sleeve openings, balanced seamlessly with an intricate scalloped premium border design.", 
-                        images: ["bwhite - Copy.jpeg", "bwhite2 - Copy.jpeg", "bwhite3 - Copy.jpeg"] 
+                        narrative: "A masterpiece of traditional design balancing rich dark contrast patterns over clean premium ivory canvas. Showcases complex multi-tiered floral Kashmiri cutwork embroidery.", 
+                        images: ["bwhite - Copy.jpeg", "bwhite2 - Copy.jpeg", "bwhite3 - Copy.jpeg"],
+                        inventory: { S: 0, M: 6, L: 9, XL: 2 }
                     },
                     { 
-                        id: 6,
-                        uniqueId: "6_terracotta",
-                        title: "Desert Earth Terracotta Chanderi Set (Terracotta)", 
+                        id: 6, 
+                        title: "Desert Earth Terracotta Chanderi Set", 
                         category: "Fusion & Prints", 
                         price: 2799, 
                         fabricInfo: "Pure Chanderi Silk Cotton Blend", 
                         badge: "New Arrival", 
-                        narrative: "Understated classic grace defined by an elegant earthen terracotta canvas. Embellished with immaculate white chikan keyhole-necklace accents, this matching coordinate pair comes wrapped in an ethereal matching print dupatta shawl displaying bold floral parameters.", 
-                        images: ["rust.jpeg", "rusty.jpeg"] 
-                    },
-                    {
-                        id: 6,
-                        uniqueId: "6_azure",
-                        title: "Desert Earth Azure Chanderi Set (Blue)", 
-                        category: "Fusion & Prints", 
-                        price: 2799, 
-                        fabricInfo: "Pure Chanderi Silk Cotton Blend", 
-                        badge: "New Arrival", 
-                        narrative: "Understated classic grace defined by an elegant deep blue layout canvas. Embellished with immaculate white chikan keyhole-necklace accents, this alternative version comes styled with dynamic comfort trousers and an block print dupatta layer setup.", 
-                        images: ["blue rust.jpeg"]
+                        narrative: "Understated classic grace defined by an elegant earthen terracotta canvas. Embellished with immaculate white chikan keyhole-necklace accents.", 
+                        images: ["rust.jpeg", "rusty.jpeg", "blue rust.jpeg"],
+                        inventory: { S: 5, M: 5, L: 5, XL: 5 }
                     },
                     { 
-                        id: 7,
-                        uniqueId: "7_green",
-                        title: "Vrindavan Peacock Kalamkari Suit Set (Green)", 
+                        id: 7, 
+                        title: "Vrindavan Peacock Kalamkari Suit Set", 
                         category: "Fusion & Prints", 
                         price: 3199, 
                         fabricInfo: "Premium Glazed Cambric Cotton", 
                         badge: "Artisan Heritage", 
-                        narrative: "A breathtaking celebration of Indian block arts. Draped in rich forest-moss green, the kurti body frames an intricate rectangular mirror-work and embroidery yoke deck. Paired beautifully with a gorgeous contrast gold-mustard dupatta showcasing fluid mythological Kalamkari prints.", 
-                        images: ["g1.jpeg", "green yellow.jpeg", "gy.jpeg"] 
-                    },
-                    { 
-                        id: 8,
-                        uniqueId: "8_wine",
-                        title: "Royal Wine Cross-Stitch Luxury Kurti (Wine)", 
-                        category: "Kurtis & Suits", 
-                        price: 3299, 
-                        fabricInfo: "Premium Textured Slub Linen Weave", 
-                        badge: "Trending Noir", 
-                        narrative: "Indulge in deep opulence with this rich plum-wine luxury ensemble. Detailed with gorgeous multi-angle rose displays and micro-bead embroidery lining along the borders, it presents side-panel floral arrays matched neatly with tailored monochrome trousers.", 
-                        images: ["WhatsApp Image 2026-05-11 at 2.04.14 PM6.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM.jpeg", "WhatsApp Image 2026-05-11 at 2.04.14 PM5.jpeg"] 
-                    },
-                    { 
-                        id: 9,
-                        uniqueId: "9_white",
-                        title: "Gilded Rose Cross-Stitch Luxe Set (White)", 
-                        category: "Kurtis & Suits", 
-                        price: 2299, 
-                        fabricInfo: "Premium Textured Cotton Slub Weave", 
-                        badge: "Trending", 
-                        narrative: "Indulge in delicate craftsmanship with this pristine ivory slub linen set. Accented with stunning pastel cross-stitch threadwork along the chest panel and premium bow-tie detailing, this flat layout showcase comes complete with elasticated coordinate pants.", 
-                        images: ["WhatsApp Image 2026-05-11 at 9.27.45 PM3.jpeg", "WhatsApp Image 2026-05-11 at 9.27.45 PM2.jpeg", "WhatsApp Image 2026-05-11 at 9.27.45 PM1 - Copy.jpeg"] 
-                    },
-                    { 
-                        id: 10,
-                        uniqueId: "10_beige",
-                        title: "Marigold Harmony Festive Kurti Set (Beige)", 
-                        category: "Festive Wear", 
-                        price: 3299, 
-                        fabricInfo: "Luxe Mercerized Cotton Silk Blend", 
-                        badge: "Festive Special", 
-                        narrative: "Exude timeless royal charm with this pristine beige-ivory ensemble. Showcases a meticulously embroidered multi-colored yoke deck weaving together teal and pink vine chains, complemented perfectly by a full-volume matching floral printed dupatta shawl overlay.", 
-                        images: ["WhatsApp Image 2026-05-13 at 5.30.31 PM.jpeg", "WhatsApp Image 2026-05-13 at 5.30.31 PM2.jpeg", "WhatsApp Image 2026-05-13 at 5.30.31 PM1.jpeg"] 
-                    },
-                    { 
-                        id: 11,
-                        uniqueId: "11_teal",
-                        title: "Persian Teal Luxe Printed Ensemble (Teal)", 
-                        category: "Fusion & Prints", 
-                        price: 2899, 
-                        fabricInfo: "Fine Glazed Cotton Satin", 
-                        badge: "Artisan Pattern", 
-                        narrative: "An absolute stunning display of rich color symmetry. Draped in high-grade turquoise-teal handloom fabrics, it presents traditional block-print geometric bands intersecting beautiful side-panel extensions and heavy embroidery trim parameters.", 
-                        images: ["WhatsApp Image 2026-05-18 at 6.22.04 PM.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM1.jpeg"] 
-                    },
-                    { 
-                        id: 12,
-                        uniqueId: "12_cream",
-                        title: "Cerulean Bloom Comfort Loungewear Set (Cream)", 
-                        category: "Co-ords", 
-                        price: 1999, 
-                        fabricInfo: "Ultra-Soft Breathable Cotton-Linen", 
-                        badge: "Premium Comfort", 
-                        narrative: "Redefining casual elegance, this contemporary co-ord set features bold blue marigold motifs over a pristine linen backdrop. Designed with an easy-going collared split neck, striped fold cuffs, and loose wide-leg statement pants layout.", 
-                        images: ["WhatsApp Image 2026-05-11 at 5.20.01 PM - Copy.jpeg", "WhatsApp Image 2026-05-11 at 5.20.01 PM1 - Copy.jpeg"] 
-                    },
-                    { 
-                        id: 13,
-                        uniqueId: "13_pink",
-                        title: "Gul-e-Anar Flared Volume Anarkali Set (Pink)", 
-                        category: "Festive Wear", 
-                        price: 3599, 
-                        fabricInfo: "Premium Breathable Mulmul Weave", 
-                        badge: "Luxury Volume", 
-                        narrative: "A romantic dreamscape built on a soft powder-pink canvas. Boasts an impressive paneled tiered skirt flare decorated with over-scaled magenta rose motifs. The bodice features an embroidered chevron yoke, premium contrast potli buttons, close-up crochet stitch trim highlights, and a soft drape dupatta layer.", 
-                        images: ["WhatsApp Image 2026-05-19 at 10.50.01 PM.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM2.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM3.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM4.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM5.jpeg"] 
-                    },
-                    { 
-                        id: 14,
-                        uniqueId: "14_white",
-                        title: "Pastel Geometry Floral A-Line Suit (White)", 
-                        category: "Kurtis & Suits", 
-                        price: 2399, 
-                        fabricInfo: "Soft Breathable Mulmul Linen", 
-                        badge: "Boho Chic", 
-                        narrative: "Immaculate off-white structural canvas presenting a fresh approach to ethnic dress lookbooks. Detailed beautifully with unique custom cross-stitch diamond blocks alongside soft lavender and sage-green mandala wildflower arrays sewn neatly across the central chest panels.", 
-                        images: ["WhatsApp Image 2026-05-23 at 10.09.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (6).jpeg"] 
-                    },
-                    { 
-                        id: 15,
-                        uniqueId: "15_fuchsia",
-                        title: "Fuchsia Meadow Fine Embroidery Set (Fuchsia)", 
-                        category: "Kurtis & Suits", 
-                        price: 2499, 
-                        fabricInfo: "Premium Fine Cambric Mulmul", 
-                        badge: "Vibrant Print", 
-                        narrative: "A pop of saturated pink to brighten up everyday boutique styling. This premium flat-lay ensemble set is layered with dense white and soft rose botanical chain-stitching running down the scalloped lace V-neckline border, balanced with comfortable matching wide palazzo trousers.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"] 
-                    },
-                    { 
-                        id: 16,
-                        uniqueId: "16_white",
-                        title: "Gulistan Vibrant Multi-Embroidery Tunic Shirt (White)", 
-                        category: "Co-ords", 
-                        price: 2699, 
-                        fabricInfo: "Premium Structured Khadi Cotton", 
-                        badge: "Atelier Edit", 
-                        narrative: "A signature structured off-white tunic shirt matching contemporary street style with ethnic craft loops. Features high-density multi-colored circular chain embroidery structures mapping across the front panel, styled with clean split sleeves and a playful hand-woven statement fringe trim down the hem line.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.50 PM (1).jpeg", "WhatsApp Image 2026-05-24 at 11.42.50 PM.jpeg"] 
-                    },
-                    { 
-                        id: 17,
-                        uniqueId: "17_lavender",
-                        title: "Bagh-e-Kashni Scalloped Rose Suit (Lavender)", 
-                        category: "Co-ords", 
-                        price: 2799, 
-                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
-                        badge: "Luxury Loungewear", 
-                        narrative: "The pinnacle of high-comfort editorial fashion. Features precise vertical pin-tucks tracing down the button placket frame. This variant highlights a soft rose-lavender foundation canvas layered with vivid blooming rose cutting clusters.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM2.jpeg"] 
-                    },
-                    { 
-                        id: 17,
-                        uniqueId: "17_rust",
-                        title: "Bagh-e-Kashni Scalloped Rose Suit (Rust)", 
-                        category: "Co-ords", 
-                        price: 2799, 
-                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
-                        badge: "Luxury Loungewear", 
-                        narrative: "The pinnacle of high-comfort editorial fashion. Outfitted with detailed sleeve panel details. This variant brings forward deep earth rust-orange coloration paths bound tightly with pink botanical overlays.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM3.jpeg"] 
-                    },
-                    { 
-                        id: 17,
-                        uniqueId: "17_black",
-                        title: "Bagh-e-Kashni Scalloped Rose Suit (Black)", 
-                        category: "Co-ords", 
-                        price: 2799, 
-                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
-                        badge: "Luxury Loungewear", 
-                        narrative: "The pinnacle of high-comfort editorial fashion. Impeccable contrast layouts highlighted down side paths. This edition matches deep dark solid charcoal backdrops with structured magenta flora elements.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.52 PM.jpeg"] 
-                    },
-                    { 
-                        id: 17,
-                        uniqueId: "17_green",
-                        title: "Bagh-e-Kashni Scalloped Rose Suit (Emerald Green)", 
-                        category: "Co-ords", 
-                        price: 2799, 
-                        fabricInfo: "Luxe Slub Cotton Silk Weave", 
-                        badge: "Luxury Loungewear", 
-                        narrative: "The pinnacle of high-comfort editorial fashion. Designed with loose fluid trousers. This edition presents high-grade forest emerald canvas surfaces contrasted gracefully against detailed pastel pink patterns.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.42.51 PM (3).jpeg"] 
-                    },
-                    { 
-                        id: 18,
-                        uniqueId: "18_red",
-                        title: "Minimalist Cherry-Moti Comfort Set (Ruby Red)", 
-                        category: "Co-ords", 
-                        price: 2399, 
-                        fabricInfo: "Fine Organic Combed Mulmul Linen", 
-                        badge: "Trending Print", 
-                        narrative: "Breezy comfort tailored seamlessly into clean solid tones with whimsical details. Features a loose tunic frame matched with straight off-white block parameters displaying delicate scattering ruby red cherry-moti prints along the bottom trousers.", 
-                        images: ["WhatsApp Image 2026-05-26 at 4.09.56 PM.jpeg"] 
-                    },
-                    { 
-                        id: 18,
-                        uniqueId: "18_indigo",
-                        title: "Minimalist Cherry-Moti Comfort Set (Indigo Blue)", 
-                        category: "Co-ords", 
-                        price: 2399, 
-                        fabricInfo: "Fine Organic Combed Mulmul Linen", 
-                        badge: "Trending Print", 
-                        narrative: "Breezy comfort tailored seamlessly into clean solid tones with whimsical details. Features a loose tunic frame matched with straight off-white block parameters displaying delicate scattering dark sapphire blue cherry-moti prints along the bottom trousers.", 
-                        images: ["WhatsApp Image 2026-05-26 at 4.09.57 PM1.jpeg", "WhatsApp Image 2026-05-26 at 4.09.57 PM2.jpeg"] 
-                    },
-                    { 
-                        id: 19,
-                        uniqueId: "19_white",
-                        title: "Bespoke Blossom Motif Fusion Silhouette (White)", 
-                        category: "Fusion & Prints", 
-                        price: 2899, 
-                        fabricInfo: "Glazed Premium Slub Satin Cotton", 
-                        badge: "Artisan Heritage", 
-                        narrative: "Make a striking statement with this minimalist premium off-white set. Anchored cleanly by an oversized blush-pink handcrafted floral petal patch across the front, accentuated by heavy textured multi-tiered gold micro-french knots inside the core center.", 
-                        images: ["WhatsApp Image 2026-05-26 at 4.09.50 PM.jpeg"] 
-                    },
-                    { 
-                        id: 20,
-                        uniqueId: "20_yellow",
-                        title: "Vasanta Marigold Gathered Festive Set (Yellow)", 
-                        category: "Festive Wear", 
-                        price: 3199, 
-                        fabricInfo: "Luxe Combed Cotton Satin Blend", 
-                        badge: "Festive Bloom", 
-                        narrative: "Channel radiant seasonal energy with this high-comfort celebratory silhouette. Styled in a deep golden marigold yellow, it highlights dense green and white floral vines chain-stitched along the scalloped V-neckline, matched neatly with a beautiful hand-painted motif dupatta layer.", 
-                        images: ["yellow.jpeg", "yellow2.jpeg"] 
-                    },
-                    { 
-                        id: 21,
-                        uniqueId: "21_lavender",
-                        title: "Lilac Dream Linear Stitch Flat-Lay Pair (Lavender)", 
-                        category: "Kurtis & Suits", 
-                        price: 2199, 
-                        fabricInfo: "Lightweight Breathable Khadi-Linen", 
-                        badge: "Casual Glamour", 
-                        narrative: "A beautifully fresh concept design for hot summer days. Draped in soft orchid lavender pink, the front panel features structured vertical white stripe stitching, scattered mini star motifs, and an architectural split-neck opening paired with contrasting solid ivory trousers.", 
-                        images: ["whitepink.jpeg", "white2.jpeg"] 
+                        narrative: "A breathtaking celebration of Indian block arts. Draped in rich forest-moss green, the kurti body frames an intricate rectangular mirror-work yoke.", 
+                        images: ["g1.jpeg", "green yellow.jpeg", "gy.jpeg"],
+                        inventory: { S: 3, M: 8, L: 4, XL: 6 }
                     }
                 ],
 
                 init() {
-                    // Fisher-Yates algorithmic engine variant to completely shuffle objects dynamically on execution loop
-                    this.shuffleCatalog();
-                    
                     this.$nextTick(() => { this.updatePillPosition(0); });
+
+                    // Persistence Framework Initialization Lookups
+                    this.cart = JSON.parse(localStorage.getItem('parampara_cart')) || [];
+                    this.wishlist = JSON.parse(localStorage.getItem('parampara_wishlist')) || [];
+                    
+                    // Initialize Catalog from localStorage, or use default dataset if empty
+                    if (!localStorage.getItem('parampara_catalog')) {
+                        this.catalogData = this.defaultCatalogData;
+                        this.saveCatalogDataToStorage();
+                    } else {
+                        this.catalogData = JSON.parse(localStorage.getItem('parampara_catalog'));
+                    }
 
                     window.addEventListener('beforeinstallprompt', (e) => {
                         e.preventDefault();
@@ -660,97 +554,104 @@
 
                     setTimeout(() => {
                         const isDismissed = localStorage.getItem('parampara_pwa_dismissed');
-                        if (!isDismissed) {
-                            this.showPwaPopup = true;
-                        }
+                        if (!isDismissed) this.showPwaPopup = true;
                     }, 3000);
+                },
 
-                    window.addEventListener('appinstalled', () => {
-                        this.showPwaPopup = false;
-                        this.deferredPrompt = null;
-                        localStorage.setItem('parampara_pwa_dismissed', 'true');
-                    });
-                },
-                shuffleCatalog() {
-                    for (let i = this.catalogData.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [this.catalogData[i], this.catalogData[j]] = [this.catalogData[j], this.catalogData[i]];
-                    }
-                },
-                handleInstallClick() {
-                    if (this.deferredPrompt) {
-                        this.deferredPrompt.prompt();
-                        this.deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
-                                localStorage.setItem('parampara_pwa_dismissed', 'true');
-                                this.showPwaPopup = false;
-                            }
-                            this.deferredPrompt = null;
-                        });
+                // Sync Functions for State Persistence
+                saveCartToStorage() { localStorage.setItem('parampara_cart', JSON.stringify(this.cart)); },
+                saveWishlistToStorage() { localStorage.setItem('parampara_wishlist', JSON.stringify(this.wishlist)); },
+                saveCatalogDataToStorage() { localStorage.setItem('parampara_catalog', JSON.stringify(this.catalogData)); },
+
+                // Seller Gate Authentication Routine
+                authenticateSeller() {
+                    if (this.sellerPasswordInput === "admin123") { // Master Key Token Example
+                        this.isSellerAuthenticated = true;
+                        this.sellerPasswordInput = '';
                     } else {
-                        const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                        if (isiOS) {
-                            alert("To install Parampara App:\n1. Tap the Share button at the bottom of Safari.\n2. Scroll down and choose 'Add to Home Screen'.");
-                        } else {
-                            alert("To install Parampara App on your device:\nClick your browser's menu option (3 vertical dots ┇ near the address bar) and select 'Install app' or 'Add to Home screen'.");
-                        }
-                        this.dismissPopup('installed-fallback');
+                        alert("Invalid Administrative Security Token.");
                     }
                 },
-                dismissPopup(reason) {
-                    this.showPwaPopup = false;
-                    if (reason === 'later' || reason === 'installed-fallback') {
-                        localStorage.setItem('parampara_pwa_dismissed', 'true');
+
+                addNewProduct() {
+                    if (!this.newProduct.title || !this.newProduct.imagePlaceholder) {
+                        alert("Please configure at least a Design Title and an image file.");
+                        return;
                     }
+                    const compiledItem = {
+                        id: Date.now(),
+                        title: this.newProduct.title,
+                        category: this.newProduct.category,
+                        price: this.newProduct.price || 0,
+                        fabricInfo: this.newProduct.fabricInfo,
+                        badge: "Atelier Edit",
+                        narrative: this.newProduct.narrative || "Bespoke design added via management terminal control deck.",
+                        images: [this.newProduct.imagePlaceholder],
+                        inventory: { ...this.newProduct.inventory }
+                    };
+
+                    this.catalogData.push(compiledItem);
+                    this.saveCatalogDataToStorage();
+
+                    // Form Reset
+                    this.newProduct.title = '';
+                    this.newProduct.narrative = '';
+                    this.newProduct.imagePlaceholder = '';
+                    alert("Product successfully pushed to active client catalogs.");
                 },
-                switchCategory(cat, index) {
-                    this.selectedCategory = cat;
-                    this.activeIndex = index;
-                    this.updatePillPosition(index);
-                    this.scrollToCatalog();
+
+                getTotalStockText(item) {
+                    const dynamicSum = Object.values(item.inventory).reduce((a, b) => acc = a + b, 0);
+                    return dynamicSum === 0 ? "Out of Stock" : `In Stock (${dynamicSum} units)`;
                 },
-                updatePillPosition(index) {
-                    const btn = document.getElementById('cat-btn-' + index);
-                    if (btn) {
-                        this.pillWidth = btn.offsetWidth;
-                        this.pillLeft = btn.offsetLeft;
-                    }
-                },
-                getPillStyles() {
-                    return `width: ${this.pillWidth}px; left: ${this.pillLeft}px;`;
-                },
-                filteredItems() {
-                    return this.catalogData.filter(unit => this.selectedCategory === 'All' || unit.category === this.selectedCategory);
-                },
-                scrollToCatalog() {
-                    document.getElementById('catalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                },
-                triggerQuickView(unit) {
-                    this.focusedUnit = unit;
-                    this.modalActiveIndex = 0;
-                    this.quickViewActive = true;
-                },
+
                 insertIntoCart(unit, size) {
-                    this.cart.push({ id: unit.uniqueId, title: unit.title, price: unit.price, image: unit.images[0], size: size });
-                    this.quickViewActive = false;
-                    this.cartOpen = true;
+                    // Update programmatic stock allocation values locally
+                    if (unit.inventory[size] > 0) {
+                        unit.inventory[size]--;
+                        this.saveCatalogDataToStorage();
+                        
+                        this.cart.push({ id: unit.id, title: unit.title, price: unit.price, image: unit.images[0], size: size });
+                        this.saveCartToStorage();
+                        
+                        this.quickViewActive = false;
+                        this.cartOpen = true;
+                    }
                 },
-                removeLineItem(idx) { this.cart.splice(idx, 1); },
-                totalCalculation() { return this.cart.reduce((acc, item) => acc + item.price, 0); },
+
+                removeLineItem(idx) {
+                    const cartItem = this.cart[idx];
+                    // Re-allocate stock capacity levels seamlessly back online
+                    const catalogItem = this.catalogData.find(i => i.id === cartItem.id);
+                    if (catalogItem) {
+                        catalogItem.inventory[cartItem.size]++;
+                        this.saveCatalogDataToStorage();
+                    }
+                    this.cart.splice(idx, 1);
+                    this.saveCartToStorage();
+                },
+
                 toggleWishlist(unit) {
-                    const idx = this.wishlist.findIndex(w => w.uniqueId === unit.uniqueId);
+                    const idx = this.wishlist.findIndex(w => w.id === unit.id);
                     if (idx > -1) this.wishlist.splice(idx, 1);
-                    else this.wishlist.push(unit);
+                    else this.wishlist.push({ id: unit.id, title: unit.title, price: unit.price, images: [unit.images[0]] });
+                    
+                    this.saveWishlistToStorage();
                 },
-                isWishlisted(uniqueId) { return this.wishlist.some(w => w.uniqueId === uniqueId); },
-                sendWhatsAppOrder(unit, size) {
-                    window.open(`https://wa.me/919810198271?text=Order%20${encodeURIComponent(unit.title)}`, '_blank');
-                },
+
+                isWishlisted(id) { return this.wishlist.some(w => w.id === id); },
+                switchCategory(cat, index) { this.selectedCategory = cat; this.activeIndex = index; this.updatePillPosition(index); this.scrollToCatalog(); },
+                updatePillPosition(index) { const btn = document.getElementById('cat-btn-' + index); if (btn) { this.pillWidth = btn.offsetWidth; this.pillLeft = btn.offsetLeft; } },
+                getPillStyles() { return `width: ${this.pillWidth}px; left: ${this.pillLeft}px;`; },
+                filteredItems() { return this.catalogData.filter(unit => this.selectedCategory === 'All' || unit.category === this.selectedCategory); },
+                scrollToCatalog() { document.getElementById('catalog').scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+                triggerQuickView(unit) { this.focusedUnit = unit; this.modalActiveIndex = 0; this.chosenSize = 'M'; this.quickViewActive = true; },
+                totalCalculation() { return this.cart.reduce((acc, item) => acc + item.price, 0); },
+                handleInstallClick() { this.dismissPopup('later'); },
+                dismissPopup(reason) { this.showPwaPopup = false; if (reason === 'later') localStorage.setItem('parampara_pwa_dismissed', 'true'); },
                 checkoutBulkWhatsApp() {
                     let message = "Hello Parampara, I would like to order the following items from the Lookbook Portfolio:\n\n";
-                    this.cart.forEach((item, index) => {
-                        message += `${index + 1}. ${item.title} (Size: ${item.size}) - ₹${item.price.toLocaleString('en-IN')}\n`;
-                    });
+                    this.cart.forEach((item, index) => { message += `${index + 1}. ${item.title} (Size: ${item.size}) - ₹${item.price.toLocaleString('en-IN')}\n`; });
                     message += `\nTotal Estimated: ₹${this.totalCalculation().toLocaleString('en-IN')}`;
                     window.open(`https://wa.me/919810198271?text=${encodeURIComponent(message)}`, '_blank');
                 }
