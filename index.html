@@ -275,6 +275,7 @@
                         <span class="serif-title font-normal text-[#4A2312] text-lg">Subtotal</span>
                         <span class="font-bold text-[#4A0E17]" x-text="'₹' + totalCalculation().toLocaleString('en-IN')"></span>
                     </div>
+                    <p class="text-[11px] text-[#8C847C] mb-6 leading-normal normal-case italic font-medium">Taxes and premium shipping logistics curated dynamically at fulfillment.</p>
                     <button @click="checkoutBulkWhatsApp()" class="w-full bg-[#4A0E17] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center space-x-2 shadow hover:bg-[#6B1824] transition"><i class="fa-brands fa-whatsapp text-lg"></i> <span>Send Order to WhatsApp</span></button>
                 </div>
             </div>
@@ -334,9 +335,8 @@
 
             <div x-show="!isSellerAuthenticated" class="max-w-md mx-auto py-12 text-center">
                 <p class="text-xs text-[#8C847C] uppercase tracking-widest mb-4">Secure Credentials Required</p>
-                <input type="email" placeholder="Seller Email" x-model="sellerEmailInput" class="w-full p-4 border border-[#EAE4DC] rounded-xl mb-3">
-                <input type="password" placeholder="Password" x-model="sellerPasswordInput" @keyup.enter="authenticateSeller()" class="w-full p-4 border border-[#EAE4DC] rounded-xl focus:outline-none mb-4">
-                <button @click="authenticateSeller()" class="w-full bg-[#4A0E17] text-white py-3.5 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#6B1824] transition">Log In to Backend</button>
+                <input type="password" placeholder="Enter Secure Master Token PIN" x-model="sellerPasswordInput" @keyup.enter="authenticateSeller()" class="w-full text-center p-4 border border-[#EAE4DC] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#4A0E17] mb-4 tracking-widest">
+                <button @click="authenticateSeller()" class="w-full bg-[#4A0E17] text-white py-3.5 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#6B1824] transition">Verify Authentication Gate</button>
             </div>
 
             <div x-show="isSellerAuthenticated" class="space-y-12">
@@ -364,7 +364,7 @@
                             </div>
                         </template>
                     </div>
-                    <button @click="addNewProduct()" class="w-full bg-[#9E7356] text-white py-3 mt-4 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#866145] transition">Commit Item to Live Firebase</button>
+                    <button @click="addNewProduct()" class="w-full bg-[#9E7356] text-white py-3 mt-4 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#866145] transition">Commit Item to Live Catalogue</button>
                 </div>
 
                 <div>
@@ -379,7 +379,6 @@
                                     <th class="p-3 text-center">M</th>
                                     <th class="p-3 text-center">L</th>
                                     <th class="p-3 text-center">XL</th>
-                                    <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-stone-100">
@@ -387,16 +386,13 @@
                                     <tr class="hover:bg-stone-50/50">
                                         <td class="p-3 font-medium text-[#2D2A26]" x-text="item.title"></td>
                                         <td class="p-3">
-                                            <input type="number" x-model.number="item.price" class="w-20 p-1.5 border rounded bg-stone-50 text-center font-bold">
+                                            <input type="number" x-model.number="item.price" @change="saveCatalogDataToStorage()" class="w-20 p-1.5 border rounded bg-stone-50 text-center font-bold">
                                         </td>
                                         <template x-for="sz in ['S', 'M', 'L', 'XL']">
                                             <td class="p-3 text-center">
-                                                <input type="number" x-model.number="item.inventory[sz]" class="w-12 p-1.5 border rounded text-center bg-stone-50">
+                                                <input type="number" x-model.number="item.inventory[sz]" @change="saveCatalogDataToStorage()" class="w-12 p-1.5 border rounded text-center bg-stone-50">
                                             </td>
                                         </template>
-                                        <td class="p-3 text-center">
-                                            <button @click="updateProductInFirebase(item)" class="bg-[#4A0E17] text-white px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider hover:bg-[#6B1824]">Save</button>
-                                        </td>
                                     </tr>
                                 </template>
                             </tbody>
@@ -404,9 +400,6 @@
                     </div>
                 </div>
 
-                <div class="pt-4 border-t text-right">
-                    <button @click="logoutSeller()" class="text-xs font-semibold text-red-600 hover:underline">Log Out Portal</button>
-                </div>
             </div>
         </div>
     </div>
@@ -416,34 +409,14 @@
         <p class="font-light normal-case tracking-normal">&copy; 2026 Parampara Luxury Ethnic Collections. All rights reserved.</p>
     </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // ⚠️ REPLACE THIS CONFIG WITH YOUR ACTUAL SECURE KEYS FROM YOUR FIREBASE CONSOLE
-        const firebaseConfig = {
-            apiKey: "AIzaSyAINtNYthis5RbE-O1a2Z_8WBHc3wla544",
-            authDomain: "paramparra.firebaseapp.com",
-            projectId: "paramparra",
-            storageBucket: "paramparra.firebasestorage.app",
-            messagingSenderId: "899787714333",
-            appId: "1:899787714333:web:3c55cc754f27c2a3c67bf4",
-            measurementId: "G-KQNJDWRQ27"
-};
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        window.paramparaApp = function() {
+    <script>
+        function paramparaApp() {
             return {
                 cartOpen: false,
                 wishlistOpen: false,
                 quickViewActive: false,
                 sellerDashboardOpen: false,
                 isSellerAuthenticated: false,
-                sellerEmailInput: '',
                 sellerPasswordInput: '',
                 selectedCategory: 'All',
                 activeIndex: 0,
@@ -473,6 +446,7 @@
 
                 defaultCatalogData: [
                     { 
+                        id: 1, 
                         title: "Gul-e-Miriam & Fuchsia Meadow Luxury Silhouette Set", 
                         category: "Festive Wear", 
                         price: 3699, 
@@ -483,6 +457,7 @@
                         inventory: { S: 4, M: 8, L: 12, XL: 3 }
                     },
                     { 
+                        id: 2, 
                         title: "Scarlet Hearts Contemporary Tunic Suit", 
                         category: "Co-ords", 
                         price: 1899, 
@@ -493,6 +468,7 @@
                         inventory: { S: 6, M: 10, L: 5, XL: 0 }
                     },
                     { 
+                        id: 3, 
                         title: "Madhubani Rose Soft Silhouette Kurti", 
                         category: "Kurtis & Suits", 
                         price: 2499, 
@@ -503,6 +479,7 @@
                         inventory: { S: 10, M: 14, L: 8, XL: 4 }
                     },
                     { 
+                        id: 4, 
                         title: "Indigo Blue Sunflower Motif Anarkali Set", 
                         category: "Kurtis & Suits", 
                         price: 2999, 
@@ -513,6 +490,7 @@
                         inventory: { S: 2, M: 5, L: 7, XL: 1 }
                     },
                     { 
+                        id: 5, 
                         title: "Ebony Onyx Royal Cutwork Palazzo Suit", 
                         category: "Festive Wear", 
                         price: 3499, 
@@ -523,6 +501,7 @@
                         inventory: { S: 0, M: 6, L: 9, XL: 2 }
                     },
                     { 
+                        id: 6, 
                         title: "Desert Earth Terracotta Chanderi Set", 
                         category: "Fusion & Prints", 
                         price: 2799, 
@@ -533,6 +512,7 @@
                         inventory: { S: 5, M: 5, L: 5, XL: 5 }
                     },
                     { 
+                        id: 7, 
                         title: "Vrindavan Peacock Kalamkari Suit Set", 
                         category: "Fusion & Prints", 
                         price: 3199, 
@@ -543,6 +523,7 @@
                         inventory: { S: 3, M: 8, L: 4, XL: 6 }
                     },
                     { 
+                        id: 8, 
                         title: "Royal Wine Cross-Stitch Luxury Kurti", 
                         category: "Kurtis & Suits", 
                         price: 3299, 
@@ -553,6 +534,7 @@
                         inventory: { S: 4, M: 5, L: 6, XL: 2 }
                     },
                     { 
+                        id: 9, 
                         title: "Gilded Rose Cross-Stitch Luxe Set", 
                         category: "Kurtis & Suits", 
                         price: 2299, 
@@ -563,6 +545,7 @@
                         inventory: { S: 8, M: 12, L: 10, XL: 4 }
                     },
                     { 
+                        id: 10, 
                         title: "Marigold Harmony Festive Kurti Set", 
                         category: "Festive Wear", 
                         price: 3299, 
@@ -573,6 +556,7 @@
                         inventory: { S: 3, M: 7, L: 5, XL: 3 }
                     },
                     { 
+                        id: 11, 
                         title: "Persian Teal Luxe Printed Ensemble", 
                         category: "Fusion & Prints", 
                         price: 2899, 
@@ -583,6 +567,7 @@
                         inventory: { S: 5, M: 9, L: 8, XL: 4 }
                     },
                     { 
+                        id: 12, 
                         title: "Cerulean Bloom Comfort Loungewear Set", 
                         category: "Co-ords", 
                         price: 1999, 
@@ -593,6 +578,7 @@
                         inventory: { S: 10, M: 12, L: 6, XL: 5 }
                     },
                     { 
+                        id: 13, 
                         title: "Gul-e-Anar Flared Volume Anarkali Set", 
                         category: "Festive Wear", 
                         price: 3599, 
@@ -603,6 +589,7 @@
                         inventory: { S: 4, M: 6, L: 8, XL: 2 }
                     },
                     { 
+                        id: 14, 
                         title: "Pastel Geometry Floral A-Line Suit", 
                         category: "Kurtis & Suits", 
                         price: 2399, 
@@ -611,16 +598,6 @@
                         narrative: "Immaculate off-white structural canvas presenting a fresh approach to ethnic dress lookbooks. Detailed beautifully with unique custom cross-stitch diamond blocks alongside soft lavender and sage-green mandala wildflower arrays sewn neatly across the central chest panels.", 
                         images: ["WhatsApp Image 2026-05-23 at 10.09.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (6).jpeg"],
                         inventory: { S: 5, M: 10, L: 7, XL: 4 }
-                    },
-                    { 
-                        title: "Fuchsia Meadow Fine Embroidery Set", 
-                        category: "Kurtis & Suits", 
-                        price: 2499, 
-                        fabricInfo: "Premium Fine Cambric Mulmul", 
-                        badge: "Vibrant Print", 
-                        narrative: "A pop of saturated pink to brighten up everyday boutique styling. This premium flat-lay ensemble set is layered with dense white and soft rose botanical chain-stitching running down the scalloped lace V-neckline border, balanced with comfortable matching wide palazzo trousers.", 
-                        images: ["WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"],
-                        inventory: { S: 3, M: 5, L: 5, XL: 1 }
                     }
                 ],
 
@@ -629,93 +606,62 @@
 
                     this.cart = JSON.parse(localStorage.getItem('parampara_cart')) || [];
                     this.wishlist = JSON.parse(localStorage.getItem('parampara_wishlist')) || [];
-
-                    // Real-Time Sync Stream Engine
-                    onSnapshot(collection(db, "products"), (snapshot) => {
-                        let items = [];
-                        snapshot.forEach((doc) => {
-                            items.push({ id: doc.id, ...doc.data() });
-                        });
-                        this.catalogData = items;
-
-                        // Smart Automatic Seeding Fallback
-                        if (items.length === 0) {
-                            this.seedDatabase();
-                        }
-                    });
-
-                    onAuthStateChanged(auth, (user) => {
-                        this.isSellerAuthenticated = !!user;
-                    });
+                    
+                    if (!localStorage.getItem('parampara_catalog')) {
+                        this.catalogData = this.defaultCatalogData;
+                        this.saveCatalogDataToStorage();
+                    } else {
+                        this.catalogData = JSON.parse(localStorage.getItem('parampara_catalog'));
+                    }
 
                     window.addEventListener('beforeinstallprompt', (e) => {
                         e.preventDefault();
                         this.deferredPrompt = e;
                     });
-                },
-
-                // Automated Back-end Population Framework
-                async seedDatabase() {
-                    console.log("Database empty. Seeding catalog collections to Firebase...");
-                    for (let p of this.defaultCatalogData) {
-                        await addDoc(collection(db, "products"), p);
-                    }
-                },
-
-                async updateProductInFirebase(item) {
-                    try {
-                        const productRef = doc(db, "products", item.id);
-                        await updateDoc(productRef, {
-                            price: item.price,
-                            inventory: item.inventory
-                        });
-                    } catch (err) {
-                        console.error("Firebase write error: ", err);
-                    }
-                },
-
-                async addNewProduct() {
-                    if (!this.newProduct.title || !this.newProduct.imagePlaceholder) {
-                        alert("Please provide a Title and Image.");
-                        return;
-                    }
-                    try {
-                        await addDoc(collection(db, "products"), {
-                            title: this.newProduct.title,
-                            category: this.newProduct.category,
-                            price: this.newProduct.price || 0,
-                            fabricInfo: this.newProduct.fabricInfo,
-                            badge: "Atelier Edit",
-                            narrative: this.newProduct.narrative || "Bespoke design.",
-                            images: [this.newProduct.imagePlaceholder],
-                            inventory: { ...this.newProduct.inventory }
-                        });
-                        
-                        this.newProduct.title = '';
-                        this.newProduct.narrative = '';
-                        this.newProduct.imagePlaceholder = '';
-                        alert("Added successfully to cloud database!");
-                    } catch (err) {
-                        alert("Firebase write error: " + err.message);
-                    }
-                },
-
-                async authenticateSeller() {
-                    try {
-                        await signInWithEmailAndPassword(auth, this.sellerEmailInput, this.sellerPasswordInput);
-                        this.sellerEmailInput = '';
-                        this.sellerPasswordInput = '';
-                    } catch (err) {
-                        alert("Authentication Failed: " + err.message);
-                    }
-                },
-
-                async logoutSeller() {
-                    await signOut(auth);
+                    setTimeout(() => {
+                        const isDismissed = localStorage.getItem('parampara_pwa_dismissed');
+                        if (!isDismissed) this.showPwaPopup = true;
+                    }, 3000);
                 },
 
                 saveCartToStorage() { localStorage.setItem('parampara_cart', JSON.stringify(this.cart)); },
                 saveWishlistToStorage() { localStorage.setItem('parampara_wishlist', JSON.stringify(this.wishlist)); },
+                saveCatalogDataToStorage() { localStorage.setItem('parampara_catalog', JSON.stringify(this.catalogData)); },
+
+                authenticateSeller() {
+                    if (this.sellerPasswordInput === "admin123") {
+                        this.isSellerAuthenticated = true;
+                        this.sellerPasswordInput = '';
+                    } else {
+                        alert("Invalid Administrative Security Token PIN.");
+                    }
+                },
+
+                addNewProduct() {
+                    if (!this.newProduct.title || !this.newProduct.imagePlaceholder) {
+                        alert("Please configure a Title and Image asset file name.");
+                        return;
+                    }
+                    const compiledItem = {
+                        id: Date.now(),
+                        title: this.newProduct.title,
+                        category: this.newProduct.category,
+                        price: this.newProduct.price || 0,
+                        fabricInfo: this.newProduct.fabricInfo,
+                        badge: "Atelier Edit",
+                        narrative: this.newProduct.narrative || "Bespoke design added manually.",
+                        images: [this.newProduct.imagePlaceholder],
+                        inventory: { ...this.newProduct.inventory }
+                    };
+
+                    this.catalogData.push(compiledItem);
+                    this.saveCatalogDataToStorage();
+
+                    this.newProduct.title = '';
+                    this.newProduct.narrative = '';
+                    this.newProduct.imagePlaceholder = '';
+                    alert("Added successfully to active live client catalogs.");
+                },
 
                 getTotalStockText(item) {
                     if (!item.inventory) return "Out of Stock";
@@ -726,7 +672,7 @@
                 insertIntoCart(unit, size) {
                     if (unit && unit.inventory && unit.inventory[size] > 0) {
                         unit.inventory[size]--;
-                        this.updateProductInFirebase(unit);
+                        this.saveCatalogDataToStorage();
                         
                         this.cart.push({ id: unit.id, title: unit.title, price: unit.price, image: unit.images[0], size: size });
                         this.saveCartToStorage();
@@ -741,7 +687,7 @@
                     const catalogItem = this.catalogData.find(i => i.id === cartItem.id);
                     if (catalogItem && catalogItem.inventory) {
                         catalogItem.inventory[cartItem.size]++;
-                        this.updateProductInFirebase(catalogItem);
+                        this.saveCatalogDataToStorage();
                     }
                     this.cart.splice(idx, 1);
                     this.saveCartToStorage();
@@ -771,7 +717,7 @@
                 triggerQuickViewFromWishlist(productId) {
                     const deeplyFoundProduct = this.catalogData.find(item => item.id === productId);
                     if (deeplyFoundProduct) this.triggerQuickView(deeplyFoundProduct);
-                    else alert("Item variant missing from catalog reference.");
+                    else alert("Item reference variant currently missing from main store data.");
                 },
 
                 totalCalculation() { return this.cart.reduce((acc, item) => acc + item.price, 0); },
