@@ -382,24 +382,24 @@
                                     <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
-                                <tbody class="divide-y divide-stone-100">
-                                    <template x-for="item in catalogData" :key="item.id">
-                                        <tr class="hover:bg-stone-50/50">
-                                            <td class="p-3 font-medium text-[#2D2A26]" x-text="item.title"></td>
-                                            <td class="p-3">
-                                                <input type="number" x-model.number="item.price" class="w-20 p-1.5 border rounded bg-stone-50 text-center font-bold">
-                                            </td>
-                                            <template x-for="sz in ['S', 'M', 'L', 'XL']">
-                                                <td class="p-3 text-center">
-                                                    <input type="number" x-model.number="item.inventory[sz]" class="w-12 p-1.5 border rounded text-center bg-stone-50">
-                                                </td>
-                                            </template>
+                            <tbody class="divide-y divide-stone-100">
+                                <template x-for="item in catalogData" :key="item.id">
+                                    <tr class="hover:bg-stone-50/50">
+                                        <td class="p-3 font-medium text-[#2D2A26]" x-text="item.title"></td>
+                                        <td class="p-3">
+                                            <input type="number" x-model.number="item.price" class="w-20 p-1.5 border rounded bg-stone-50 text-center font-bold">
+                                        </td>
+                                        <template x-for="sz in ['S', 'M', 'L', 'XL']">
                                             <td class="p-3 text-center">
-                                                <button @click="updateProductInFirebase(item)" class="bg-[#4A0E17] text-white px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider hover:bg-[#6B1824]">Save</button>
+                                                <input type="number" x-model.number="item.inventory[sz]" class="w-12 p-1.5 border rounded text-center bg-stone-50">
                                             </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
+                                        </template>
+                                        <td class="p-3 text-center">
+                                            <button @click="updateProductInFirebase(item)" class="bg-[#4A0E17] text-white px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider hover:bg-[#6B1824]">Save</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -411,21 +411,26 @@
         </div>
     </div>
 
+    <footer class="mt-24 py-10 border-t border-[#EAE4DC] text-center text-[10px] text-[#8C847C] uppercase tracking-[0.25em]">
+        <p class="serif-title text-[#4A2312] text-xl font-normal tracking-wide normal-case mb-2">Parampara</p>
+        <p class="font-light normal-case tracking-normal">&copy; 2026 Parampara Luxury Ethnic Collections. All rights reserved.</p>
+    </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ⚠️ REPLACE THIS CONFIG WITH YOUR NATIVE CREDENTIALS FROM STEP 1
+        // ⚠️ REPLACE THIS CONFIG WITH YOUR ACTUAL SECURE KEYS FROM YOUR FIREBASE CONSOLE
         const firebaseConfig = {
-    apiKey: "AIzaSyAINtNYthis5RbE-O1a2Z_8WBHc3wla544",
-    authDomain: "paramparra.firebaseapp.com",
-    projectId: "paramparra",
-    storageBucket: "paramparra.firebasestorage.app",
-    messagingSenderId: "899787714333",
-    appId: "1:899787714333:web:3c55cc754f27c2a3c67bf4",
-    measurementId: "G-KQNJDWRQ27"
-  };
+            apiKey: "AIzaSyAINtNYthis5RbE-O1a2Z_8WBHc3wla544",
+            authDomain: "paramparra.firebaseapp.com",
+            projectId: "paramparra",
+            storageBucket: "paramparra.firebasestorage.app",
+            messagingSenderId: "899787714333",
+            appId: "1:899787714333:web:3c55cc754f27c2a3c67bf4",
+            measurementId: "G-KQNJDWRQ27"
+};
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -466,23 +471,179 @@
                     inventory: { S: 5, M: 10, L: 10, XL: 5 }
                 },
 
+                defaultCatalogData: [
+                    { 
+                        title: "Gul-e-Miriam & Fuchsia Meadow Luxury Silhouette Set", 
+                        category: "Festive Wear", 
+                        price: 3699, 
+                        fabricInfo: "Premium Handloom Cotton Silk Weave", 
+                        badge: "Premium Festive", 
+                        narrative: "A breathtaking presentation of pink artisan opulence. Showcases intricate floral branch threadwork cross-stitched natively over the central layout panels, layered neatly with dense white botanical chain-stitching down the scalloped lace neck profile.", 
+                        images: ["pink.jpeg", "pink2.jpeg", "WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"],
+                        inventory: { S: 4, M: 8, L: 12, XL: 3 }
+                    },
+                    { 
+                        title: "Scarlet Hearts Contemporary Tunic Suit", 
+                        category: "Co-ords", 
+                        price: 1899, 
+                        fabricInfo: "Premium Organic Khadi Cotton", 
+                        badge: "Summer Essential", 
+                        narrative: "A playful yet thoroughly minimalist contemporary silhouette curated from breathable cotton slub canvas. Embellished with scattered, vibrant hand-embroidered scarlet hearts.", 
+                        images: ["org - Copy.jpeg", "oh.jpeg", "oh - Copy.jpeg"],
+                        inventory: { S: 6, M: 10, L: 5, XL: 0 }
+                    },
+                    { 
+                        title: "Madhubani Rose Soft Silhouette Kurti", 
+                        category: "Kurtis & Suits", 
+                        price: 2499, 
+                        fabricInfo: "Soft Organic Slub Cotton Linen", 
+                        badge: "Minimalist Luxe", 
+                        narrative: "Celebrate pure grace with this soft orchid-pink longline straight kurti. Embellished with subtle geometric lace inserts down the bodice placket.", 
+                        images: ["pinkw.jpeg"],
+                        inventory: { S: 10, M: 14, L: 8, XL: 4 }
+                    },
+                    { 
+                        title: "Indigo Blue Sunflower Motif Anarkali Set", 
+                        category: "Kurtis & Suits", 
+                        price: 2999, 
+                        fabricInfo: "Handcrafted Cambric Mulmul Silk", 
+                        badge: "Bestseller", 
+                        narrative: "An absolute vision of luxury heritage. This lightweight matching outfit features striking block-printed midnight blue sunflowers blooming along clean parameters.", 
+                        images: ["bluew.jpeg", "blue w.jpeg"],
+                        inventory: { S: 2, M: 5, L: 7, XL: 1 }
+                    },
+                    { 
+                        title: "Ebony Onyx Royal Cutwork Palazzo Suit", 
+                        category: "Festive Wear", 
+                        price: 3499, 
+                        fabricInfo: "Fine Resham Mulmul Cotton Linen Blend", 
+                        badge: "Prestige Edition", 
+                        narrative: "A masterpiece of traditional design balancing rich dark contrast patterns over clean premium ivory canvas. Showcases complex multi-tiered floral Kashmiri cutwork embroidery.", 
+                        images: ["bwhite - Copy.jpeg", "bwhite2 - Copy.jpeg", "bwhite3 - Copy.jpeg"],
+                        inventory: { S: 0, M: 6, L: 9, XL: 2 }
+                    },
+                    { 
+                        title: "Desert Earth Terracotta Chanderi Set", 
+                        category: "Fusion & Prints", 
+                        price: 2799, 
+                        fabricInfo: "Pure Chanderi Silk Cotton Blend", 
+                        badge: "New Arrival", 
+                        narrative: "Understated classic grace defined by an elegant earthen terracotta canvas. Embellished with immaculate white chikan keyhole-necklace accents.", 
+                        images: ["rust.jpeg", "rusty.jpeg", "blue rust.jpeg"],
+                        inventory: { S: 5, M: 5, L: 5, XL: 5 }
+                    },
+                    { 
+                        title: "Vrindavan Peacock Kalamkari Suit Set", 
+                        category: "Fusion & Prints", 
+                        price: 3199, 
+                        fabricInfo: "Premium Glazed Cambric Cotton", 
+                        badge: "Artisan Heritage", 
+                        narrative: "A breathtaking celebration of Indian block arts. Draped in rich forest-moss green, the kurti body frames an intricate rectangular mirror-work yoke.", 
+                        images: ["g1.jpeg", "green yellow.jpeg", "gy.jpeg"],
+                        inventory: { S: 3, M: 8, L: 4, XL: 6 }
+                    },
+                    { 
+                        title: "Royal Wine Cross-Stitch Luxury Kurti", 
+                        category: "Kurtis & Suits", 
+                        price: 3299, 
+                        fabricInfo: "Premium Textured Slub Linen Weave", 
+                        badge: "Trending Noir", 
+                        narrative: "Indulge in deep opulence with this rich plum-wine luxury ensemble. Detailed with gorgeous multi-angle rose displays and micro-bead embroidery lining along the borders.", 
+                        images: ["WhatsApp Image 2026-05-11 at 2.04.14 PM6.jpeg"],
+                        inventory: { S: 4, M: 5, L: 6, XL: 2 }
+                    },
+                    { 
+                        title: "Gilded Rose Cross-Stitch Luxe Set", 
+                        category: "Kurtis & Suits", 
+                        price: 2299, 
+                        fabricInfo: "Premium Textured Cotton Slub Weave", 
+                        badge: "Trending", 
+                        narrative: "Indulge in delicate craftsmanship with this pristine ivory slub linen set. Accented with stunning pastel cross-stitch threadwork along the chest panel.", 
+                        images: ["WhatsApp Image 2026-05-11 at 9.27.45 PM3.jpeg", "WhatsApp Image 2026-05-11 at 9.27.45 PM2.jpeg", "WhatsApp Image 2026-05-11 at 9.27.45 PM1 - Copy.jpeg"],
+                        inventory: { S: 8, M: 12, L: 10, XL: 4 }
+                    },
+                    { 
+                        title: "Marigold Harmony Festive Kurti Set", 
+                        category: "Festive Wear", 
+                        price: 3299, 
+                        fabricInfo: "Luxe Mercerized Cotton Silk Blend", 
+                        badge: "Festive Special", 
+                        narrative: "Exude timeless royal charm with this pristine beige-ivory ensemble. Showcases a meticulously embroidered multi-colored yoke deck weaving together teal and pink vine chains.", 
+                        images: ["WhatsApp Image 2026-05-13 at 5.30.31 PM.jpeg", "WhatsApp Image 2026-05-13 at 5.30.31 PM2.jpeg", "WhatsApp Image 2026-05-13 at 5.30.31 PM1.jpeg"],
+                        inventory: { S: 3, M: 7, L: 5, XL: 3 }
+                    },
+                    { 
+                        title: "Persian Teal Luxe Printed Ensemble", 
+                        category: "Fusion & Prints", 
+                        price: 2899, 
+                        fabricInfo: "Fine Glazed Cotton Satin", 
+                        badge: "Artisan Pattern", 
+                        narrative: "An absolute stunning display of rich color symmetry. Draped in high-grade turquoise-teal handloom fabrics, it presents traditional block-print geometric bands.", 
+                        images: ["WhatsApp Image 2026-05-18 at 6.22.04 PM.jpeg", "WhatsApp Image 2026-05-18 at 6.22.04 PM1.jpeg"],
+                        inventory: { S: 5, M: 9, L: 8, XL: 4 }
+                    },
+                    { 
+                        title: "Cerulean Bloom Comfort Loungewear Set", 
+                        category: "Co-ords", 
+                        price: 1999, 
+                        fabricInfo: "Ultra-Soft Breathable Cotton-Linen", 
+                        badge: "Premium Comfort", 
+                        narrative: "Redefining casual elegance, this contemporary co-ord set features bold blue marigold motifs over a pristine linen backdrop. Designed with an easy-going collared split neck.", 
+                        images: ["WhatsApp Image 2026-05-11 at 5.20.01 PM - Copy.jpeg", "WhatsApp Image 2026-05-11 at 5.20.01 PM1 - Copy.jpeg"],
+                        inventory: { S: 10, M: 12, L: 6, XL: 5 }
+                    },
+                    { 
+                        title: "Gul-e-Anar Flared Volume Anarkali Set", 
+                        category: "Festive Wear", 
+                        price: 3599, 
+                        fabricInfo: "Premium Breathable Mulmul Weave", 
+                        badge: "Luxury Volume", 
+                        narrative: "A romantic dreamscape built on a soft powder-pink canvas. Boasts an impressive paneled tiered skirt flare decorated with over-scaled magenta rose motifs. The bodice features an embroidered chevron yoke, premium contrast potli buttons, close-up crochet stitch trim highlights, and a soft drape dupatta layer.", 
+                        images: ["WhatsApp Image 2026-05-19 at 10.50.01 PM.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM2.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM3.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM4.jpeg", "WhatsApp Image 2026-05-19 at 10.50.01 PM5.jpeg"],
+                        inventory: { S: 4, M: 6, L: 8, XL: 2 }
+                    },
+                    { 
+                        title: "Pastel Geometry Floral A-Line Suit", 
+                        category: "Kurtis & Suits", 
+                        price: 2399, 
+                        fabricInfo: "Soft Breathable Mulmul Linen", 
+                        badge: "Boho Chic", 
+                        narrative: "Immaculate off-white structural canvas presenting a fresh approach to ethnic dress lookbooks. Detailed beautifully with unique custom cross-stitch diamond blocks alongside soft lavender and sage-green mandala wildflower arrays sewn neatly across the central chest panels.", 
+                        images: ["WhatsApp Image 2026-05-23 at 10.09.25 PM (7).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (3).jpeg", "WhatsApp Image 2026-05-23 at 10.09.25 PM (6).jpeg"],
+                        inventory: { S: 5, M: 10, L: 7, XL: 4 }
+                    },
+                    { 
+                        title: "Fuchsia Meadow Fine Embroidery Set", 
+                        category: "Kurtis & Suits", 
+                        price: 2499, 
+                        fabricInfo: "Premium Fine Cambric Mulmul", 
+                        badge: "Vibrant Print", 
+                        narrative: "A pop of saturated pink to brighten up everyday boutique styling. This premium flat-lay ensemble set is layered with dense white and soft rose botanical chain-stitching running down the scalloped lace V-neckline border, balanced with comfortable matching wide palazzo trousers.", 
+                        images: ["WhatsApp Image 2026-05-24 at 11.19.38 PM.jpeg"],
+                        inventory: { S: 3, M: 5, L: 5, XL: 1 }
+                    }
+                ],
+
                 init() {
                     this.$nextTick(() => { this.updatePillPosition(0); });
 
-                    // Connect client-side sync modules to browser storage frames
                     this.cart = JSON.parse(localStorage.getItem('parampara_cart')) || [];
                     this.wishlist = JSON.parse(localStorage.getItem('parampara_wishlist')) || [];
 
-                    // Real-Time Sync: Listen directly to changes in the cloud Firestore database
+                    // Real-Time Sync Stream Engine
                     onSnapshot(collection(db, "products"), (snapshot) => {
                         let items = [];
                         snapshot.forEach((doc) => {
                             items.push({ id: doc.id, ...doc.data() });
                         });
                         this.catalogData = items;
+
+                        // Smart Automatic Seeding Fallback
+                        if (items.length === 0) {
+                            this.seedDatabase();
+                        }
                     });
 
-                    // Manage portal auth pipeline states
                     onAuthStateChanged(auth, (user) => {
                         this.isSellerAuthenticated = !!user;
                     });
@@ -491,13 +652,16 @@
                         e.preventDefault();
                         this.deferredPrompt = e;
                     });
-                    setTimeout(() => {
-                        const isDismissed = localStorage.getItem('parampara_pwa_dismissed');
-                        if (!isDismissed) this.showPwaPopup = true;
-                    }, 3000);
                 },
 
-                // Push item modifications directly to Firebase
+                // Automated Back-end Population Framework
+                async seedDatabase() {
+                    console.log("Database empty. Seeding catalog collections to Firebase...");
+                    for (let p of this.defaultCatalogData) {
+                        await addDoc(collection(db, "products"), p);
+                    }
+                },
+
                 async updateProductInFirebase(item) {
                     try {
                         const productRef = doc(db, "products", item.id);
@@ -505,9 +669,8 @@
                             price: item.price,
                             inventory: item.inventory
                         });
-                        alert("Database synchronized successfully!");
                     } catch (err) {
-                        alert("Error saving: " + err.message);
+                        console.error("Firebase write error: ", err);
                     }
                 },
 
@@ -531,9 +694,9 @@
                         this.newProduct.title = '';
                         this.newProduct.narrative = '';
                         this.newProduct.imagePlaceholder = '';
-                        alert("Added to live database!");
+                        alert("Added successfully to cloud database!");
                     } catch (err) {
-                        alert("Firebase write blocked: " + err.message);
+                        alert("Firebase write error: " + err.message);
                     }
                 },
 
