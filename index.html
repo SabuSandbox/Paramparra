@@ -275,7 +275,6 @@
                         <span class="serif-title font-normal text-[#4A2312] text-lg">Subtotal</span>
                         <span class="font-bold text-[#4A0E17]" x-text="'₹' + totalCalculation().toLocaleString('en-IN')"></span>
                     </div>
-                    <p class="text-[11px] text-[#8C847C] mb-6 leading-normal normal-case italic font-medium">Taxes and premium shipping logistics curated dynamically at fulfillment.</p>
                     <button @click="checkoutBulkWhatsApp()" class="w-full bg-[#4A0E17] text-white py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center space-x-2 shadow hover:bg-[#6B1824] transition"><i class="fa-brands fa-whatsapp text-lg"></i> <span>Send Order to WhatsApp</span></button>
                 </div>
             </div>
@@ -614,6 +613,9 @@
                         this.catalogData = JSON.parse(localStorage.getItem('parampara_catalog'));
                     }
 
+                    // Dynamic Shuffle Execution: Randomizes arrangement array layout seamlessly every time the user refreshes
+                    this.catalogData = this.catalogData.sort(() => Math.random() - 0.5);
+
                     window.addEventListener('beforeinstallprompt', (e) => {
                         e.preventDefault();
                         this.deferredPrompt = e;
@@ -629,7 +631,7 @@
                 saveCatalogDataToStorage() { localStorage.setItem('parampara_catalog', JSON.stringify(this.catalogData)); },
 
                 authenticateSeller() {
-                    if (this.sellerPasswordInput === "2806") {
+                    if (this.sellerPasswordInput === "admin123") {
                         this.isSellerAuthenticated = true;
                         this.sellerPasswordInput = '';
                     } else {
